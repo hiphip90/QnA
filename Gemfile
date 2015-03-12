@@ -43,6 +43,7 @@ group :development, :test do
   gem 'spring'
 
   gem 'rspec-rails'
+  gem 'guard-rspec'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'
 end
