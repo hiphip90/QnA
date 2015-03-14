@@ -12,6 +12,8 @@ RSpec.describe User, type: :model do
                          'first.last@foo.jp', 'alice+bob@baz.cn').for(:email) }
   it { should_not allow_value('user@example,com', 'user_at_foo.org', 'user.name@example.',
                            'foo@bar_baz.com', 'foo@bar+baz.com', 'foo@bar..com').for(:email) }
+  it { should have_many(:questions) }
+  it { should have_many(:answers) }
   
   it 'saves email in all downcase' do
     user = create(:user, email: "EMilY@GmaiL.COM")
