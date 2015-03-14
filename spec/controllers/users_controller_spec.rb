@@ -36,10 +36,10 @@ RSpec.describe UsersController, type: :controller do
     end
     context 'with invalid user info' do
       it 'does not create user in db' do
-        expect { post :create, user: { name: nil, email: nil } }.not_to change(User, :count)
+        expect { post :create, user: attributes_for(:user, :invalid) }.not_to change(User, :count)
       end
       it 're-renders new view' do
-        post :create, user: { name: nil, email: nil }
+        post :create, user: attributes_for(:user, :invalid)
         expect(response).to render_template(:new)
       end
     end
