@@ -29,10 +29,10 @@ RSpec.describe AnswersController, type: :controller do
                 answer: attributes_for(:answer, user_id: user.id, body: nil) }.
                 to_not change(user.answers, :count)
       end
-      it 'redirects to questions page' do
+      it 're-renders questions page' do
         post :create, question_id: question.id, 
-                answer: attributes_for(:answer, user_id: user.id)
-        expect(response).to redirect_to question_path(question.id)
+                answer: attributes_for(:answer, user_id: user.id, body: nil)
+        expect(response).to render_template(:show)
       end
     end
   end
