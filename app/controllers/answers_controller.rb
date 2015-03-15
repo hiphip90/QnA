@@ -1,18 +1,16 @@
 class AnswersController < ApplicationController
   def create
-    user = User.find(answer_params[:user_id])
-    @answer = user.answers.build(answer_params)
-    question_id = params[:question_id]
-    @answer.question_id = question_id
-    if @answer.save
-      redirect_to question_url(id: question_id)
+    @question = Question.find(params[:question_id])
+    @new_answer = @question.answers.build(answer_params)
+    if @new_answer.save
+      redirect_to @question
     else
-      render 'questions/show', id: question_id
+      render 'questions/show'
     end
   end
 
   private
     def answer_params
-      params.require(:answer).permit(:body, :user_id)
+      params.require(:answer).permit(:body)
     end
 end

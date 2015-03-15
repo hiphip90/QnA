@@ -6,6 +6,5 @@ FactoryGirl.define do
       title nil
       body nil
     end
-    user
   end
 end

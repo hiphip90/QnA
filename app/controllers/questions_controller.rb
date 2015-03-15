@@ -10,8 +10,7 @@ class QuestionsController < ApplicationController
     @new_answer = Answer.new
   end
   def create
-    @user = User.find(question_params[:user_id])
-    @question = @user.questions.build(question_params)
+    @question = Question.new(question_params)
     if @question.save
       redirect_to @question
     else
@@ -21,6 +20,6 @@ class QuestionsController < ApplicationController
 
   private
     def question_params
-      params.require(:question).permit(:title, :body, :user_id)
+      params.require(:question).permit(:title, :body)
     end
 end

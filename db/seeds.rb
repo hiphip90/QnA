@@ -6,20 +6,14 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 10.times do |n|
-  name = Faker::Name.name
-  email = "example-#{n+1}@example.com"
-  User.create!(name: name, email: email)
-end
-
-User.all.each do |user|
   title = Faker::Lorem.sentence(6)
   body = Faker::Lorem.paragraph(4)
-  user.questions.create!(title: title, body: body)
+  Question.create!(title: title, body: body)
 end
 
 Question.all.each do |question|
-  User.all.each do |user|
+  10.times do
     body = Faker::Lorem.sentence(6)
-    question.answers.create!(body: body, user_id: user.id)
+    question.answers.create!(body: body)
   end
 end

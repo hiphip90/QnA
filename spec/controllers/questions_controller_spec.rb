@@ -8,6 +8,7 @@ RSpec.describe QuestionsController, type: :controller do
       questions = create_list(:question, 2)
       expect(assigns(:questions)).to match_array(questions)
     end
+
     it 'renders index view' do
       expect(response).to render_template(:index)
     end
@@ -19,6 +20,7 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns new question variable' do
       expect(assigns(:question)).to_not be_nil
     end
+
     it 'renders new view' do
       expect(response).to render_template(:new)
     end
@@ -31,33 +33,37 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns the requested question' do
       expect(assigns(:question)).to eq question
     end
+
     it 'renders show view' do
       expect(response).to render_template(:show)
     end
+
     it 'assigns blank new answer to a variable' do
       expect(assigns(:new_answer)).to_not be_nil
     end
   end
 
   describe 'POST #create' do
-    let (:user) { create(:user) }
     context 'with valid parameters' do
       it 'saves question in db' do
-        expect { post :create, question: attributes_for(:question, user_id: user.id) }.
-                                                        to change(user.questions, :count).by(1)
+        expect { post :create, question: attributes_for(:question) }.
+                                                        to change(Question.all, :count).by(1)
       end
+
       it 'redirects to question page' do
-        post :create, question: attributes_for(:question, user_id: user.id)
+        post :create, question: attributes_for(:question)
         expect(response).to redirect_to question_path(Question.last)
       end
     end
+    
     context 'with invalid parameters' do
       it 'does not save question in db' do
         expect { post :create, question: attributes_for(:question,
-                              :invalid, user_id: user.id) }.to_not change(user.questions, :count)
+                              :invalid) }.to_not change(Question.all, :count)
       end
+
       it 'renders new template' do
-        post :create, question: attributes_for(:question,:invalid, user_id: user.id)
+        post :create, question: attributes_for(:question,:invalid)
         expect(response).to render_template(:new)
       end
     end
