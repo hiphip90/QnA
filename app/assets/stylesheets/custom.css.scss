@@ -3,8 +3,15 @@ body {
   padding-top: 50px;
 }
 
-.right-align {
-  float: right;
+h1 {
+  text-align: center;
+  font-size: 1.8em!important;
+}
+
+.page-header {
+  text-align: left;
+  font-size: 1.5em;
+  margin: 20px 0px 10px!important;
 }
 
 /* logo */
@@ -22,5 +29,20 @@ body {
 footer {
   hr {
     margin-bottom: 10px;
+  }
+}
+
+/* forms */
+input {
+  margin-bottom: 10px;
+  width:100%;
+}
+
+/* users index */
+.users-list {
+  list-style-type: none;
+  padding-left: 15px;
+  h3 {
+    margin: 10px 0px 0px;
   }
 }

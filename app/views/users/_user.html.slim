@@ -1,8 +1,4 @@
 li
   h3
-    == link_to user.name, user
-  == link_to 'delete', user, method: :delete
-  br
-  | id: 
-  == user.id
- 
+    == user.name
+  small #{ link_to 'delete', user, method: :delete } | id: #{ user.id }
