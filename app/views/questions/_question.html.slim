@@ -1,5 +1,5 @@
 li
   h3
     = link_to question.title, question
-  |   Author:
-  = link_to question.user.name, question.user
+  small author:  
+  = question.user.name
