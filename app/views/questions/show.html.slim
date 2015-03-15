@@ -10,12 +10,12 @@ hr.question-divider
 h4 Your answer
 div.row
   div.col-md-6
-    == form_for [@question, @new_answer] do |f|
+    = form_for [@question, @new_answer] do |f|
       div.form-group
-        == f.label :body
-        == f.text_area :body, class: 'form-control'
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
       div.form-group
-        == f.label :user_id
-        == f.text_field :user_id, class: 'form-control'
+        = f.label :user_id
+        = f.text_field :user_id, class: 'form-control'
       div.form-group
-        == f.submit 'Submit answer', class: 'btn btn-primary'
+        = f.submit 'Submit answer', class: 'btn btn-primary'

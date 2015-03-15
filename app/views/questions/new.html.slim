@@ -4,13 +4,13 @@ div.row
     = form_for @question do |f|
       = render 'shared/error_messages', object: f.object
       div.form-group
-      = f.label :title
-      = f.text_field :title, class: 'form-control'
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
       div.form-group
-      = f.label :body
-      = f.text_area :body, class: 'form-control'
+        = f.label :body
+        = f.text_area :body, class: 'form-control'
       div.form-group
-      = f.label :user_id
-      = f.text_field :user_id, class: 'form-control'
+        = f.label :user_id
+        = f.text_field :user_id, class: 'form-control'
       div.form-group
-      = f.submit 'Create question', class: 'btn btn-primary'
+        = f.submit 'Create question', class: 'btn btn-primary'
