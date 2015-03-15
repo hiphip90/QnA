@@ -31,12 +31,11 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns the requested question' do
       expect(assigns(:question)).to eq question
     end
-    it 'assigns author to the user varibale' do
-      author = User.find(question.user_id)
-      expect(assigns(:user)).to eq author
-    end
     it 'renders show view' do
       expect(response).to render_template(:show)
+    end
+    it 'assigns blank new answer to a variable' do
+      expect(assigns(:new_answer)).to_not be_nil
     end
   end
 
