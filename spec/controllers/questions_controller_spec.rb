@@ -47,7 +47,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid parameters' do
       it 'saves question in db' do
         expect { post :create, question: attributes_for(:question) }.
-                                                        to change(Question.all, :count).by(1)
+                                                        to change(Question, :count).by(1)
       end
 
       it 'redirects to question page' do
@@ -59,7 +59,7 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with invalid parameters' do
       it 'does not save question in db' do
         expect { post :create, question: attributes_for(:question,
-                              :invalid) }.to_not change(Question.all, :count)
+                              :invalid) }.to_not change(Question, :count)
       end
 
       it 'renders new template' do
