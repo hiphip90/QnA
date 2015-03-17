@@ -1,0 +1,85 @@
+/* Universal */
+body {
+  padding-top: 50px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.8em!important;
+}
+
+.page-header {
+  text-align: left;
+  font-size: 1.5em;
+  margin: 20px 0px 10px!important;
+}
+
+footer {
+  margin-bottom: 50px;
+}
+
+/* logo */
+#logo {
+  padding-top: 5px;
+  a {
+    color: white;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+  }
+}
+
+/* footer */
+footer {
+  hr {
+    margin-bottom: 10px;
+  }
+}
+
+/* forms */
+input {
+  margin-bottom: 10px;
+  width:100%;
+}
+
+/* users index */
+.users-list {
+  list-style-type: none;
+  padding-left: 15px;
+  h3 {
+    font-size: 1.3em;
+    margin: 10px 0px 0px;
+  }
+}
+
+/* questions index */
+.questions-list {
+  list-style-type: none;
+  padding-left: 15px;
+  h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 10px 0px 0px;
+  }
+}
+
+/* question page */
+.question-divider {
+  margin: 10px 0 10px;
+}
+
+.answers-count {
+  margin-top: 20px;
+}
+
+.answers-block {
+  list-style-type: none;
+  padding-left: 10px;
+  margin-bottom: 20px;
+  li {
+    margin-bottom: 15px;
+    .answer-body {
+      margin-bottom: 0px;
+    }
+  }
+}
