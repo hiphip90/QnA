@@ -6,9 +6,9 @@ feature 'Checking questions list', %q{
   I must be able to see questions list
 } do
 
-  given!(:question_list) { create_list(:question, 3) }
-
   scenario 'User requests questions list' do
+    question_list = create_list(:question, 3)
+
     visit root_path
     click_on 'Questions'
     

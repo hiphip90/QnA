@@ -5,9 +5,10 @@ feature 'Checking question page', %q{
   As a User
   I must be able to see question page
 } do
-  given!(:question) { create(:question, :with_answers) }
 
   scenario 'User requests question page' do
+    question = create(:question, :with_answers)
+
     visit root_path
     click_on question.title
 

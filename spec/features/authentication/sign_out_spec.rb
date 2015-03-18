@@ -9,11 +9,7 @@ feature 'Sign out process', %q{
   scenario 'User signs out' do
     user = create(:user)
 
-    visit root_path
-    click_on 'Sign In'
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
-    click_button 'Log in'
+    sign_in_as(user)
     click_on 'Sign Out'
 
     expect(current_path).to eq root_path

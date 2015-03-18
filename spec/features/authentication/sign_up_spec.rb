@@ -5,10 +5,10 @@ feature 'Sign up process', %q{
   As a user
   I must be able to register
 } do
-
-  given(:user) { build(:user) }
   
   scenario 'User signs up' do
+    user = build(:user)
+
     visit root_path
     click_on 'Sign Up'
     fill_in 'Name', with: user.name

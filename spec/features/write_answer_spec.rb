@@ -5,10 +5,10 @@ feature 'Writing answer', %q{
   As a user
   I must be able to write answer
 } do
-  
-  given(:question) { create(:question) }
 
   scenario 'User writes answer' do
+    question = create(:question)
+
     visit question_path(question)
     fill_in 'Body', with: "Do a barrell roll"
     click_on 'Post answer'
