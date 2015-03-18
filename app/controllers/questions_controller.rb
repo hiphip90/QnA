@@ -15,6 +15,7 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
     if @question.save
+      flash[:success] = "You've successfully created a question!"
       redirect_to @question
     else
       render 'new'

@@ -45,25 +45,34 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'POST #create' do
     context 'with valid parameters' do
+      let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
+
       it 'saves question in db' do
-        expect { post :create, question: attributes_for(:question) }.
-                                                        to change(Question, :count).by(1)
+        expect { post_with_valid_params }.to change(Question, :count).by(1)
       end
 
       it 'redirects to question page' do
-        post :create, question: attributes_for(:question)
+        post_with_valid_params
         expect(response).to redirect_to question_path(Question.last)
+      end
+
+      it 'sets flash message' do
+        post_with_valid_params
+        expect(flash[:success]).to_not be_nil
       end
     end
     
     context 'with invalid parameters' do
+      let(:post_with_invalid_params) do 
+        post :create, question: attributes_for(:question, :invalid)
+      end
+
       it 'does not save question in db' do
-        expect { post :create, question: attributes_for(:question,
-                              :invalid) }.to_not change(Question, :count)
+        expect { post_with_invalid_params }.to_not change(Question, :count)
       end
 
       it 'renders new template' do
-        post :create, question: attributes_for(:question,:invalid)
+        post_with_invalid_params
         expect(response).to render_template(:new)
       end
     end
