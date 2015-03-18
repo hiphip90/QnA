@@ -11,8 +11,9 @@ feature 'Checking questions list', %q{
   scenario 'User requests questions list' do
     visit root_path
     click_on 'Questions'
+    
     question_list.each do |question|
-      expect(page).to have_content question.title
+      expect(page).to have_link question.title
     end
   end
 end
