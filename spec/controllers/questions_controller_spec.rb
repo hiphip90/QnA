@@ -59,8 +59,8 @@ RSpec.describe QuestionsController, type: :controller do
     context 'with valid parameters' do
       let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
 
-      it 'saves question in db' do
-        expect { post_with_valid_params }.to change(Question, :count).by(1)
+      it 'saves question in db and assigns it to user' do
+        expect { post_with_valid_params }.to change(@user.questions, :count).by(1)
       end
 
       it 'redirects to question page' do
