@@ -10,13 +10,12 @@ feature 'Delete answer process', %q{
     @user = create(:user, :author)
     @another_user = create(:user)
     @question = @user.questions.last
+    @answer = @question.answers.create(body: 'smth smth answer')
     sign_in_as(@user)
   end
 
   scenario 'User deletes his answer' do
-    answer = @user.answers.build(body: 'smth smth answer')
-    answer.question = @question
-    answer.save
+    @answer.update_attributes(user: @user)
 
     visit question_path(@question)
     click_on 'Delete answer'
@@ -26,18 +25,14 @@ feature 'Delete answer process', %q{
   end
 
   scenario "User tries to delete someone else's answer" do
-    answer = @another_user.answers.build(body: 'smth smth answer')
-    answer.question = @question
-    answer.save
+    @answer.update_attributes(user: @another_user)
 
     visit question_path(@question)
     expect(page).to_not have_content 'Delete answer'
   end
 
   scenario 'Non-authenticated user tries to delete answer' do
-    answer = @user.answers.build(body: 'smth smth answer')
-    answer.question = @question
-    answer.save
+    @answer.update_attributes(user: @user)
 
     visit root_path
     click_on 'Sign Out'
