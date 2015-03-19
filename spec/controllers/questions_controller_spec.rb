@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
+
   describe 'GET #index' do
     before { get :index }
 
@@ -15,6 +16,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
+    sign_in_user
     before { get :new }
 
     it 'assigns new question variable' do
@@ -23,6 +25,14 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'renders new view' do
       expect(response).to render_template(:new)
+    end
+
+    context 'when user is not logged in' do
+      it 'redirects to signin page' do 
+        sign_out @user
+        get :new
+        expect(response).to redirect_to new_user_session_path
+      end
     end
   end
 
@@ -44,6 +54,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'with valid parameters' do
       let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
 
@@ -74,6 +86,20 @@ RSpec.describe QuestionsController, type: :controller do
       it 'renders new template' do
         post_with_invalid_params
         expect(response).to render_template(:new)
+      end
+    end
+
+    context 'when user is not logged in' do
+      before { sign_out @user }
+      let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
+
+      it 'does not save question in db' do
+        expect { post_with_valid_params }.to_not change(Question, :count)
+      end
+
+      it 'redirects to sign in page' do
+        post_with_valid_params
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end

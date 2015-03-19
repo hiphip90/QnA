@@ -5,14 +5,15 @@ p == @question.body
   hr.question-divider
   ul.answers-block
     == render @question.answers
-hr.question-divider
-h4 Your answer
-div.row
-  div.col-md-6
-    = form_for [@question, @new_answer] do |f|
-      = render 'shared/error_messages', object: f.object
-      div.form-group
-        = f.label :body
-        = f.text_area :body, class: 'form-control'
-      div.form-group
-        = f.submit 'Post answer', class: 'btn btn-primary'
+- if user_signed_in?
+  hr.question-divider
+  h4 Your answer
+  div.row
+    div.col-md-6
+      = form_for [@question, @new_answer] do |f|
+        = render 'shared/error_messages', object: f.object
+        div.form-group
+          = f.label :body
+          = f.text_area :body, class: 'form-control'
+        div.form-group
+          = f.submit 'Post answer', class: 'btn btn-primary'

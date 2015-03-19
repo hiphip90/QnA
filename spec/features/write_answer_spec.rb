@@ -6,13 +6,23 @@ feature 'Writing answer', %q{
   I must be able to write answer
 } do
 
-  scenario 'User writes answer' do
-    question = create(:question)
+  given(:question) { create(:question) }
+  given(:user) { create(:user) }
+
+  scenario 'Authenticated user writes answer' do
+    sign_in_as(user)
 
     visit question_path(question)
     fill_in 'Body', with: "Do a barrell roll"
     click_on 'Post answer'
 
     expect(page).to have_content "Do a barrell roll"
+  end
+
+  scenario 'Non-authenticated user writes answer' do
+    visit question_path(question)
+    
+    expect(page).to_not have_field 'Body'
+    expect(page).to_not have_button 'Post answer'
   end
 end

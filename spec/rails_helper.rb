@@ -31,8 +31,12 @@ RSpec.configure do |config|
   # Add factory girl methods to specs
   config.include FactoryGirl::Syntax::Methods
 
-  # Add feature helper methods
+  # Add helper methods from support dir
   config.include FeatureHelpers
+  config.extend ControllerHelpers
+
+  # Add devise helpers
+  config.include Devise::TestHelpers, type: :controller
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false

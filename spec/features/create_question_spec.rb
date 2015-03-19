@@ -6,7 +6,11 @@ feature 'Creating question', %q{
   I must be able to create questions
 } do
 
-  scenario 'User creates a question' do
+  given(:user) { create(:user) }
+
+  scenario 'Authenticated user creates a question' do
+    sign_in_as(user)
+
     visit root_path
     click_on 'Ask question'
     fill_in 'Title', with: 'Ultimate question'
@@ -15,5 +19,13 @@ feature 'Creating question', %q{
 
     expect(page).to have_content "You've successfully created a question!"
     expect(current_path).to eq(question_path(Question.last))
+  end
+
+  scenario 'Unauthenticated user creates a question' do
+    
+    visit root_path
+    click_on 'Ask question'
+
+    expect(current_path).to eq new_user_session_path
   end
 end
