@@ -1,5 +1,7 @@
 h1.page-header == @question.title
-p == @question.body 
+p == @question.body
+- if current_user == @question.user
+  = link_to 'Delete question', @question, method: :delete
 - if @question.answers.any?
   h4.answers-count #{ pluralize(@question.answers.count, 'answer') }
   hr.question-divider

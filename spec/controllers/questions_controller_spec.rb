@@ -103,4 +103,58 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    sign_in_user
+    before do
+      @question = @user.questions.create(attributes_for(:question))
+      @another_user = create(:user, :author)
+      @another_question = @another_user.questions.last
+    end
+
+    context 'when current user is the author' do
+      let(:destroy_correct_question) { delete :destroy, id: @question.id }
+
+      it 'deletes question from db' do
+        expect{ destroy_correct_question }.to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to root on successful destroy' do
+        destroy_correct_question
+        expect(response).to redirect_to root_path
+      end
+
+      it 'shows sets flash message' do
+        destroy_correct_question
+        expect(flash[:success]).to_not be_nil
+      end
+    end
+
+    context 'when current user is not the author' do
+      let(:destroy_incorrect_question) { delete :destroy, id: @another_question.id }
+
+      it 'does not delete question' do
+        expect{ destroy_incorrect_question }.to_not change(Question, :count)
+      end
+
+      it 'redirects to root' do
+        destroy_incorrect_question
+        expect(response).to redirect_to root_path
+      end
+    end
+
+    context 'when user is not logged in' do
+      before { sign_out @user }
+      let(:destroy_question) { delete :destroy, id: @question.id }
+
+      it 'does not delete question' do
+        expect{ destroy_question }.to_not change(Question, :count)
+      end
+
+      it 'redirects to sign in page' do
+        destroy_question
+        expect(response).to redirect_to new_user_session_path
+      end
+    end
+  end
 end

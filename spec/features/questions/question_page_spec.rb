@@ -12,6 +12,7 @@ feature 'Checking question page', %q{
     visit root_path
     click_on question.title
 
+    expect(current_path).to eq question_path(question)
     question.answers.each do |answer|
       expect(page).to have_content answer.body
     end

@@ -8,5 +8,10 @@ FactoryGirl.define do
       name nil
       email nil
     end
+    trait :author do
+      after(:create) do |user|
+        user.questions.create(attributes_for(:question))
+      end
+    end
   end
 end
