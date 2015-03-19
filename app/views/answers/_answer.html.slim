@@ -1,2 +1,4 @@
 li
   p.answer-body = answer.body
+  - if current_user == answer.user
+    = link_to 'Delete answer', [answer.question, answer], method: :delete
