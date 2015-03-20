@@ -11,7 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
-    @new_answer = Answer.new
+    @answer = Answer.new
   end
   
   def create
@@ -26,7 +26,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     @question = Question.find(params[:id])
-    if current_user == @question.user
+    if current_user.id == @question.user.id
       @question.destroy
       flash[:success] = "You've successfully deleted a question!"
     end

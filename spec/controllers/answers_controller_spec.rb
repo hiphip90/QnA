@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  sign_in_user
   let(:question) { create(:question) }
+  let(:user) { create(:user) }
+  before { sign_in(user) }
 
   describe 'POST #create' do
     let(:post_valid) { post :create, question_id: question.id, 
@@ -16,7 +17,7 @@ RSpec.describe AnswersController, type: :controller do
       end
 
       it 'associates it with a current user' do
-        expect{ post_valid }.to change(@user.answers, :count).by(1)
+        expect{ post_valid }.to change(user.answers, :count).by(1)
       end
 
       it 'redirects to questions page' do
@@ -37,7 +38,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'when user is not logged in' do
-      before { sign_out @user }
+      before { sign_out user }
 
       it 'does not save answer in db' do
         expect{ post_valid }.to_not change(Answer, :count)
@@ -55,7 +56,7 @@ RSpec.describe AnswersController, type: :controller do
     let(:delete_answer) { delete :destroy, question_id: question.id, id: answer.id }
     
     context 'when current user is the author' do
-      before { answer.update_attributes(user: @user) }
+      before { answer.update_attributes(user: user) }
 
       it 'deletes answer from db' do
         expect{ delete_answer }.to change(Answer, :count).by(-1)
@@ -83,8 +84,8 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'when user is not logged in' do
       before do
-        answer.update_attributes(user: @user)
-        sign_out @user
+        answer.update_attributes(user: user)
+        sign_out user
       end
 
       it 'does not delete answer' do

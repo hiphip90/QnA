@@ -16,8 +16,11 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    sign_in_user
-    before { get :new }
+    let(:user) { create(:user) }
+    before do 
+      sign_in(user)
+      get :new
+    end
 
     it 'assigns new question variable' do
       expect(assigns(:question)).to_not be_nil
@@ -29,7 +32,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'when user is not logged in' do
       it 'redirects to signin page' do 
-        sign_out @user
+        sign_out user
         get :new
         expect(response).to redirect_to new_user_session_path
       end
@@ -49,18 +52,21 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it 'assigns blank new answer to a variable' do
-      expect(assigns(:new_answer)).to_not be_nil
+      expect(assigns(:answer)).to_not be_nil
     end
   end
 
   describe 'POST #create' do
-    sign_in_user
+    let(:user) { create(:user) }
+    before do 
+      sign_in(user)
+    end
 
     context 'with valid parameters' do
       let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
 
       it 'saves question in db and assigns it to user' do
-        expect { post_with_valid_params }.to change(@user.questions, :count).by(1)
+        expect { post_with_valid_params }.to change(user.questions, :count).by(1)
       end
 
       it 'redirects to question page' do
@@ -90,7 +96,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when user is not logged in' do
-      before { sign_out @user }
+      before { sign_out user }
       let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
 
       it 'does not save question in db' do
@@ -105,15 +111,17 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    sign_in_user
+    let!(:user) { create(:user, :author) }
+    let!(:another_user) { create(:user, :author) }
     before do
-      @question = @user.questions.create(attributes_for(:question))
-      @another_user = create(:user, :author)
-      @another_question = @another_user.questions.last
+      sign_in(user)
+      #@question = user.questions.create(attributes_for(:question))
+      #@another_user = create(:user, :author)
+      #@another_question = @another_user.questions.last
     end
 
     context 'when current user is the author' do
-      let(:destroy_correct_question) { delete :destroy, id: @question.id }
+      let(:destroy_correct_question) { delete :destroy, id: user.questions.last.id }
 
       it 'deletes question from db' do
         expect{ destroy_correct_question }.to change(Question, :count).by(-1)
@@ -131,7 +139,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when current user is not the author' do
-      let(:destroy_incorrect_question) { delete :destroy, id: @another_question.id }
+      let(:destroy_incorrect_question) { delete :destroy, id: another_user.questions.last.id }
 
       it 'does not delete question' do
         expect{ destroy_incorrect_question }.to_not change(Question, :count)
@@ -144,8 +152,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'when user is not logged in' do
-      before { sign_out @user }
-      let(:destroy_question) { delete :destroy, id: @question.id }
+      before { sign_out user }
+      let(:destroy_question) { delete :destroy, id: user.questions.last.id }
 
       it 'does not delete question' do
         expect{ destroy_question }.to_not change(Question, :count)
