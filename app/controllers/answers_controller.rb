@@ -3,9 +3,9 @@ class AnswersController < ApplicationController
   
   def create
     @question = Question.find(params[:question_id])
-    @new_answer = @question.answers.build(answer_params)
-    @new_answer.user = current_user
-    if @new_answer.save
+    @answer = @question.answers.build(answer_params)
+    @answer.user = current_user
+    if @answer.save
       redirect_to @question
     else
       render 'questions/show'
