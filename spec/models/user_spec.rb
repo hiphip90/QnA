@@ -18,4 +18,7 @@ RSpec.describe User, type: :model do
     user.reload
     expect(user.email).to eq "emily@gmail.com"
   end
+
+  it { should have_many(:questions).dependent(:destroy) }
+  it { should have_many(:answers).dependent(:destroy) }
 end

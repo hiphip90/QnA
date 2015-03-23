@@ -7,3 +7,11 @@ nav.navbar.navbar-inverse.navbar-fixed-top
         = link_to 'Ask question', new_question_url
       li
         = link_to 'Questions', questions_url
+      - if user_signed_in?
+        li
+          = link_to 'Sign Out', destroy_user_session_url, method: :delete
+      -else
+        li
+          = link_to 'Sign Up', new_user_registration_url
+        li
+          = link_to 'Sign In', new_user_session_url
