@@ -5,14 +5,14 @@ p == @question.body
 - if @question.answers.any?
   h4.answers-count #{ pluralize(@question.answers.count, 'answer') }
   hr.question-divider
-  ul.answers-block
-    == render @question.answers
+ul.answers-block
+  == render @question.answers
 - if user_signed_in?
   hr.question-divider
   h4 Your answer
   div.row
     div.col-md-6
-      = form_for [@question, @answer] do |f|
+      = form_for [@question, @answer], remote: true do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body

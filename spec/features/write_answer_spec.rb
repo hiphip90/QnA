@@ -6,9 +6,9 @@ feature 'Writing answer', %q{
   I must be able to write answer
 } do
 
-  given(:user) { create(:user, :author) }
+  given!(:user) { create(:user, :author) }
 
-  scenario 'Authenticated user writes answer' do
+  scenario 'Authenticated user writes answer', js: true do
     sign_in_as(user)
 
     visit question_path(user.questions.last)

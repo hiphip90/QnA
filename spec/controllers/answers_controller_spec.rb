@@ -6,47 +6,90 @@ RSpec.describe AnswersController, type: :controller do
   before { sign_in(user) }
 
   describe 'POST #create' do
-    let(:post_valid) { post :create, question_id: question.id, 
-                              answer: attributes_for(:answer) }
-    let(:post_invalid) { post :create, question_id: question.id, 
-                              answer: attributes_for(:answer, body: nil) }
+    context "when client's js is enabled" do
+      let(:post_valid) { post :create, question_id: question.id, 
+                                answer: attributes_for(:answer), format: :js }
+      let(:post_invalid) { post :create, question_id: question.id, 
+                                answer: attributes_for(:answer, body: nil), format: :js }
 
-    context 'with valid info' do
-      it 'saves answer in db and associates it with a proper question' do
-        expect{ post_valid }.to change(question.answers, :count).by(1)
+      context 'with valid info' do
+        it 'saves answer in db and associates it with a proper question' do
+          expect{ post_valid }.to change(question.answers, :count).by(1)
+        end
+
+        it 'associates it with a current user' do
+          expect{ post_valid }.to change(user.answers, :count).by(1)
+        end
+
+        it 'renders create template' do
+          post_valid
+          expect(response).to render_template(:create)
+        end
       end
 
-      it 'associates it with a current user' do
-        expect{ post_valid }.to change(user.answers, :count).by(1)
+      context 'with invalid info' do
+        it 'does not create answer in database' do
+          expect{ post_invalid }.to_not change(Answer, :count)
+        end
       end
 
-      it 'redirects to questions page' do
-        post_valid
-        expect(response).to redirect_to question_path(question.id)
+      context 'when user is not logged in' do
+        before { sign_out user }
+
+        it 'does not save answer in db' do
+          expect{ post_valid }.to_not change(Answer, :count)
+        end
+
+        it 'responds with 401' do
+          post_valid
+          expect(response.status).to eq 401
+        end
       end
     end
 
-    context 'with invalid info' do
-      it 'does not create answer in database' do
-        expect{ post_invalid }.to_not change(Answer, :count)
-      end
-      
-      it 're-renders questions page' do
-        post_invalid
-        expect(response).to render_template(:show)
-      end
-    end
+    context "when js is not enabled" do
+      let(:post_valid) { post :create, question_id: question.id, 
+                                answer: attributes_for(:answer) }
+      let(:post_invalid) { post :create, question_id: question.id, 
+                                answer: attributes_for(:answer, body: nil) }
 
-    context 'when user is not logged in' do
-      before { sign_out user }
+      context 'with valid info' do
+        it 'saves answer in db and associates it with a proper question' do
+          expect{ post_valid }.to change(question.answers, :count).by(1)
+        end
 
-      it 'does not save answer in db' do
-        expect{ post_valid }.to_not change(Answer, :count)
+        it 'associates it with a current user' do
+          expect{ post_valid }.to change(user.answers, :count).by(1)
+        end
+
+        it 'renders create template' do
+          post_valid
+          expect(response).to redirect_to question_path(question)
+        end
       end
 
-      it 'redirects to sign in page' do
-        post_valid
-        expect(response).to redirect_to new_user_session_path
+      context 'with invalid info' do
+        it 'does not create answer in database' do
+          expect{ post_invalid }.to_not change(Answer, :count)
+        end
+
+        it 're-renders question show' do
+          post_invalid
+          expect(response).to render_template(:show)
+        end
+      end
+
+      context 'when user is not logged in' do
+        before { sign_out user }
+
+        it 'does not save answer in db' do
+          expect{ post_valid }.to_not change(Answer, :count)
+        end
+
+        it 'responds with 401' do
+          post_valid
+          expect(response).to redirect_to new_user_session_path
+        end
       end
     end
   end
