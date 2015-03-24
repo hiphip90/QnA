@@ -46,6 +46,19 @@ input {
   width:100%;
 }
 
+input[type="checkbox"] {
+  width: auto;
+}
+
+.checkbox-inline {
+  margin-top: -10px;
+  margin-bottom: 10px;
+  span {
+    margin-left: 10px;
+    font-weight: normal;
+  }
+}
+
 /* questions index */
 .questions-list {
   list-style-type: none;
