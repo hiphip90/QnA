@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :question do
     sequence(:title) { |n| "My question #{n}" }
     body "Ultimate Question of Life, Universe and Everything"
+    user
 
     trait :invalid do 
       title nil

@@ -1,17 +1,20 @@
-h1.page-header == @question.title
-p == @question.body
-- if user_signed_in? && current_user.id == @question.user.id
-  = link_to 'Delete question', @question, method: :delete
+div.show-question-block
+  h1.page-header == @question.title
+  p.question-body == @question.body
+  - if user_signed_in? && current_user.id == @question.user.id
+    span.author-links = link_to 'Delete question', @question, method: :delete
+  span.pull-right.user-info
+    | asked 
+    = time_ago_in_words(@question.created_at)
+    |  ago by 
+    = @question.user.name
 - if @question.answers.any?
-  h4.answers-count #{ pluralize(@question.answers.count, 'answer') }
-  hr.question-divider
-ul.answers-block
-  == render @question.answers
+  == render 'answers/answer_list'
 - if user_signed_in?
   hr.question-divider
   h4 Your answer
   div.row
-    div.col-md-6
+    div.col-md-4
       = form_for [@question, @answer], remote: true do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group

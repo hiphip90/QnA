@@ -1,3 +1,15 @@
-li
-  h3
-    = link_to question.title, question
+div.question
+  div.question-block
+    h3
+      = link_to question.title, question
+    span
+      = question.body.length < 170 ? question.body : question.body[0..170].chomp(' ') + ' ...'
+  div.user-info-block
+    span.created-at
+      | asked 
+      = time_ago_in_words(question.created_at)
+      |  ago
+    br
+    span.created-by
+      | by 
+      = question.user.name

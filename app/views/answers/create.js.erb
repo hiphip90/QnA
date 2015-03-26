@@ -1,1 +1,5 @@
-$('.answers-block').append('<%= j render(@answer) %>');
+<% if @question.answers.count == 1 %>
+  $('.show-question-block').after("<%= j render 'answer_list' %>")
+<% else %>
+  $('.answers-block').append('<%= j render(@answer) %>');
+<% end %>

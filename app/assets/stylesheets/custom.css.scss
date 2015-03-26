@@ -1,4 +1,5 @@
 /* Universal */
+
 body {
   padding-top: 50px;
 }
@@ -12,10 +13,6 @@ h1 {
   text-align: left;
   font-size: 1.5em;
   margin: 20px 0px 10px!important;
-}
-
-footer {
-  margin-bottom: 50px;
 }
 
 div.alert {
@@ -36,6 +33,10 @@ div.alert {
 
 /* footer */
 footer {
+  margin-bottom: 50px;
+  text-align: right;
+  float: left;
+  width: 100%;
   hr {
     margin-bottom: 10px;
   }
@@ -62,16 +63,49 @@ input[type="checkbox"] {
 
 /* questions index */
 .questions-list {
-  list-style-type: none;
-  padding-left: 15px;
-  h3 {
-    font-size: 1.5em;
-    font-weight: bold;
-    margin: 10px 0px 0px;
+  margin-top: -10px;
+  float: left;
+  .question {
+    float: left;
+    width: 100%;
+    border-bottom: 1px solid rgb(238,238,238);
+    padding-bottom: 10px;
+  }
+  .question:last-child {
+    border-bottom: none;
   }
 }
 
+.question-block {
+  width: 75%;
+  float: left;
+  h3 {
+    font-size: 1.2em;
+    margin: 12px 0px 0px;
+  }
+  span {
+    word-wrap: break-word;
+    font-size: 0.95em;
+  }
+}
+
+.user-info-block {
+  font-size: 0.95em;
+  float: right;
+  width: 20%;
+  text-align: right;
+  margin-top: 12px;
+}
+
 /* question page */
+.question-body {
+  word-wrap: break-word;
+}
+
+.show-question-block span {
+  font-size: 0.95em;
+}
+
 .question-divider {
   margin: 10px 0 10px;
 }

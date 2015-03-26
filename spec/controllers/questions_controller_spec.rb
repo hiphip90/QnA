@@ -37,7 +37,7 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response).to redirect_to new_user_session_path
       end
     end
-  end
+  end   
 
   describe 'GET #show' do
     let(:question) { create(:question) }
@@ -115,9 +115,6 @@ RSpec.describe QuestionsController, type: :controller do
     let!(:another_user) { create(:user, :author) }
     before do
       sign_in(user)
-      #@question = user.questions.create(attributes_for(:question))
-      #@another_user = create(:user, :author)
-      #@another_question = @another_user.questions.last
     end
 
     context 'when current user is the author' do
