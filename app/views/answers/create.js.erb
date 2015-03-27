@@ -3,3 +3,5 @@
 <% else %>
   $('.answers-block').append('<%= j render(@answer) %>');
 <% end %>
+$('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>")
+$('#answer_body').val('')
