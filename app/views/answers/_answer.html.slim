@@ -1,4 +1,14 @@
 li
-  p.answer-body = answer.body
-  - if user_signed_in? && current_user.id == answer.user.id
-    = link_to 'Delete answer', [answer.question, answer], method: :delete
+  div.answer-body id="answer_#{answer.id}"
+    = answer.body
+  div.control_links
+    - if user_signed_in? && current_user.id == answer.user.id
+      = link_to 'Delete answer', [answer.question, answer], method: :delete
+      = link_to 'Edit answer', {}, class: "edit-answer"
+  div.edit-answer-form.conceal
+    = form_for [@question, answer], remote: true do |f|
+      = render 'shared/error_messages', object: f.object
+      = f.label :body, 'Edit answer'
+      = f.text_area :body
+      = f.submit 'Save', class: 'submit'
+      = f.button 'Discard', class: 'discard'

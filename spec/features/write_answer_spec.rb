@@ -17,6 +17,16 @@ feature 'Writing answer', %q{
     expect(page).to have_content "Do a barrell roll"
   end
 
+  scenario 'Authenticated user writes invalid answer', js: true do
+    sign_in_as(user)
+    visit question_path(user.questions.last)
+    fill_in 'Body', with: ""
+    click_on 'Post answer'
+
+    expect(page).to_not have_content "Do a barrell roll"
+    expect(page).to have_content "Body can't be blank"
+  end
+
   scenario 'Non-authenticated user writes answer' do
     visit question_path(user.questions.last)
     

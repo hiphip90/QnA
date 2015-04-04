@@ -141,4 +141,37 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    let(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
+    before do 
+      patch :update, question_id: question.id, id: answer.id,
+                     answer: { body: 'Edited answer' }, format: :js
+    end
+
+    context 'when logged in user in the author' do
+      it 'assigns answer to a variable' do
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'changes answers body' do
+        answer.reload
+        expect(answer.body).to eq 'Edited answer'
+      end
+
+      it 'assigns question variable' do
+        expect(assigns(:question)).to_not be_nil
+      end
+
+      it 'renders update' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'when user is not logged in' do
+
+    end
+
+    context 'when user is not author'
+  end
 end
