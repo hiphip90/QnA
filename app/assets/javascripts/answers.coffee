@@ -4,14 +4,14 @@
 
 $ ->
   # show edit form 
-  $(".edit-answer").on "click", (e) -> 
+  $(".edit-answer").click (e) -> 
     e.preventDefault()
     answer = $(this).parents("li")
-    answer.find(".answer-body").addClass('conceal')
-    answer.find(".edit-answer-form").removeClass('conceal')
+    answer.find(".answer-body").hide();
+    answer.find(".edit-answer-form").show();
 
   # discard edit and hide form
   $(".discard, .submit").click ->
     answer = $(this).parents("li")
-    answer.find(".answer-body").removeClass('conceal')
-    answer.find(".edit-answer-form").addClass('conceal')
+    answer.find(".answer-body").show();
+    answer.find(".edit-answer-form").hide();
