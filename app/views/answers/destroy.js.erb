@@ -1,0 +1,6 @@
+<% if @question.answers.count == 0 %>
+  $('.answers').remove();
+<% else %>
+  $('#<%= dom_id(@answer) %>').remove();
+  $('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>");
+<% end %>

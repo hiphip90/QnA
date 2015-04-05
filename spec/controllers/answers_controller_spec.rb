@@ -97,18 +97,13 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'DELETE #destroy' do
     let!(:answer) { question.answers.create(body: 'smth smth answer') }
-    let(:delete_answer) { delete :destroy, question_id: question.id, id: answer.id }
+    let(:delete_answer) { delete :destroy, question_id: question.id, id: answer.id, format: :js }
     
     context 'when current user is the author' do
       before { answer.update_attributes(user: user) }
 
       it 'deletes answer from db' do
         expect{ delete_answer }.to change(Answer, :count).by(-1)
-      end
-
-      it 'redirects to question page' do
-        delete_answer
-        expect(response).to redirect_to question
       end
     end
 
@@ -117,11 +112,6 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not delete answer' do
         expect{ delete_answer }.to_not change(Answer, :count)
-      end
-
-      it 'redirects to root' do
-        delete_answer
-        expect(response).to redirect_to root_path
       end
     end
 
@@ -135,9 +125,9 @@ RSpec.describe AnswersController, type: :controller do
         expect{ delete_answer }.to_not change(Answer, :count)
       end
 
-      it 'redirects to sign in' do
+      it 'responds with 401' do
         delete_answer
-        expect(response).to redirect_to new_user_session_path
+        expect(response.status).to eq 401
       end
     end
   end

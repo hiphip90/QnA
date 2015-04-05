@@ -19,11 +19,9 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = Answer.find(params[:id])
+    @question = @answer.question
     if current_user.id == @answer.user.id
       @answer.destroy
-      redirect_to @answer.question
-    else
-      redirect_to root_path
     end
   end
 

@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative 'feature_js_config'
 
 feature 'Delete answer process', %q{
   In order to delete bad answer
@@ -14,13 +14,12 @@ feature 'Delete answer process', %q{
     sign_in_as(@user)
   end
 
-  scenario 'User deletes his answer' do
+  scenario 'User deletes his answer', js: true do
     @answer.update_attributes(user: @user)
 
     visit question_path(@question)
     click_on 'Delete answer'
-
-    expect(current_path).to eq question_path(@question)
+    
     expect(page).to_not have_content 'smth smth answer'
   end
 

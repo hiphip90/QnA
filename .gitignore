@@ -12,4 +12,6 @@
 !/log/.keep
 /tmp
 
+questions
+
 config/database.yml

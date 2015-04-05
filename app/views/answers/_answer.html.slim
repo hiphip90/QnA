@@ -3,7 +3,7 @@ li id="answer_#{answer.id}"
     span
       = answer.body
     - if user_signed_in? && current_user.id == answer.user.id
-      = link_to 'Delete answer', [answer.question, answer], method: :delete
+      = link_to 'Delete answer', [answer.question, answer], remote: true, method: :delete
       = link_to 'Edit answer', {}, class: "edit-answer"
   div.edit-answer-form.conceal
     = form_for [@question, answer], remote: true do |f|
