@@ -11,7 +11,9 @@ $ ->
     answer.find(".edit-answer-form").show();
 
   # discard edit and hide form
-  $(document).on "click", ".discard, .submit", (e) ->
+  $(document).on "click", ".discard", (e) ->
     answer = $(this).parents("li")
     answer.find(".answer-body").show();
     answer.find(".edit-answer-form").hide();
+    answer.find("#error_explanation").remove();
+    answer.find("#answer_body").val(answer.find('span').text())

@@ -1,6 +1,6 @@
-li
+li id="answer_#{answer.id}"
   div.answer-body
-    span id="answer_#{answer.id}"
+    span
       = answer.body
     - if user_signed_in? && current_user.id == answer.user.id
       = link_to 'Delete answer', [answer.question, answer], method: :delete
@@ -10,4 +10,4 @@ li
       = f.label :body, 'Edit answer'
       = f.text_area :body
       = f.submit 'Save', class: 'submit'
-      = f.button 'Discard', class: 'discard'
+      = f.button 'Discard', class: 'discard', type: 'button'

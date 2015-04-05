@@ -16,7 +16,7 @@ feature 'Answer editing', %q{
 
     within '.answers-block' do
       click_on 'Edit answer'
-      fill_in 'answer_body', with: 'something something answer'
+      fill_in 'Edit answer', with: 'something something answer'
       click_on 'Save'
 
       expect(page).to_not have_selector('textarea')
@@ -32,12 +32,11 @@ feature 'Answer editing', %q{
 
     fill_in 'Body', with: answer.body
     click_on 'Post answer'
+    expect(page).to have_content(answer.body)
 
     within '.answers-block' do
-      expect(page).to have_content(answer.body)
-
       click_on 'Edit answer'
-      fill_in 'answer_body', with: 'something something answer'
+      fill_in 'Edit answer', with: 'something something answer'
       click_on 'Save'
 
       expect(page).to_not have_selector('textarea')
@@ -52,7 +51,7 @@ feature 'Answer editing', %q{
 
     within '.answers-block' do
       click_on 'Edit answer'
-      fill_in 'answer_body', with: 'something something answer'
+      fill_in 'Edit answer', with: 'something something answer'
       click_on 'Discard'
 
       expect(page).to_not have_selector('textarea')
@@ -67,7 +66,7 @@ feature 'Answer editing', %q{
 
     within '.answers-block' do
       click_on 'Edit answer'
-      fill_in 'answer_body', with: ''
+      fill_in 'Edit answer', with: ''
       click_on 'Save'
 
       expect(page).to have_selector('textarea')

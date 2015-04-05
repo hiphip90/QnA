@@ -1,10 +1,11 @@
 $('#error_explanation').remove();
 <% if @answer.errors.any? %>
-  $('#new_answer').prepend("<%= j render 'shared/error_messages', object: @answer %>")
+  $('#new_answer').prepend("<%= j render 'shared/error_messages', object: @answer %>");
 <% elsif @question.answers.count == 1 %>
-  $('.show-question-block').after("<%= j render 'answer_list' %>")
+  $('.show-question-block').after("<%= j render 'answer_list' %>");
+  $('#new_answer').find('#answer_body').val('');
 <% else %>
-  $('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>")
+  $('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>");
   $('.answers-block').append('<%= j render(@answer) %>');
-  $('#answer_body').val('')
+  $('#new_answer').find('#answer_body').val('');
 <% end %>
