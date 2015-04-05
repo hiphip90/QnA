@@ -16,14 +16,62 @@ feature 'Answer editing', %q{
 
     within '.answers-block' do
       click_on 'Edit answer'
-      fill_in 'Edit answer', with: 'something something answer'
+      fill_in 'answer_body', with: 'something something answer'
       click_on 'Save'
-    end
 
-    expect(page).to_not have_content(answer.body)
-    expect(page).to have_content('something something answer')
-    within('.answers-block') do
       expect(page).to_not have_selector('textarea')
+      expect(page).to_not have_content(answer.body)
+      expect(page).to have_content('something something answer')
+    end
+  end
+
+  scenario 'Authenticated user edits freshly created answer', js: true do
+    sign_in_as(user)
+    answer.destroy
+    visit question_path(user.questions.last)
+
+    fill_in 'Body', with: answer.body
+    click_on 'Post answer'
+
+    within '.answers-block' do
+      expect(page).to have_content(answer.body)
+
+      click_on 'Edit answer'
+      fill_in 'answer_body', with: 'something something answer'
+      click_on 'Save'
+
+      expect(page).to_not have_selector('textarea')
+      expect(page).to_not have_content(answer.body)
+      expect(page).to have_content('something something answer')
+    end
+  end
+
+  scenario 'Authenticated user discards changes', js: true do
+    sign_in_as(user)
+    visit question_path(user.questions.last)
+
+    within '.answers-block' do
+      click_on 'Edit answer'
+      fill_in 'answer_body', with: 'something something answer'
+      click_on 'Discard'
+
+      expect(page).to_not have_selector('textarea')
+      expect(page).to_not have_content("something something answer")
+      expect(page).to have_content(answer.body)
+    end
+  end
+
+  scenario 'Authenticated user edits answer with invalid info', js: true do
+    sign_in_as(user)
+    visit question_path(user.questions.last)
+
+    within '.answers-block' do
+      click_on 'Edit answer'
+      fill_in 'answer_body', with: ''
+      click_on 'Save'
+
+      expect(page).to have_selector('textarea')
+      expect(page).to have_content("Body can't be blank")
     end
   end
 

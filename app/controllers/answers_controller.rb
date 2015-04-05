@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   def create
     @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params)
+    @answers = @question.answers.includes(:user)
     @answer.user = current_user
 
     respond_to do |format|

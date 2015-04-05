@@ -13,7 +13,7 @@ feature 'Writing answer', %q{
     visit question_path(user.questions.last)
     fill_in 'Body', with: "Do a barrell roll"
     click_on 'Post answer'
-
+    
     expect(page).to have_content "Do a barrell roll"
   end
 

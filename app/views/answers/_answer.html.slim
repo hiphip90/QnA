@@ -7,7 +7,6 @@ li
       = link_to 'Edit answer', {}, class: "edit-answer"
   div.edit-answer-form.conceal
     = form_for [@question, answer], remote: true do |f|
-      = render 'shared/error_messages', object: f.object
       = f.label :body, 'Edit answer'
       = f.text_area :body
       = f.submit 'Save', class: 'submit'

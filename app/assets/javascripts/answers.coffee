@@ -4,14 +4,14 @@
 
 $ ->
   # show edit form 
-  $(".edit-answer").click (e) -> 
+  $(document).on "click", ".edit-answer", (e) -> 
     e.preventDefault()
     answer = $(this).parents("li")
     answer.find(".answer-body").hide();
     answer.find(".edit-answer-form").show();
 
   # discard edit and hide form
-  $(".discard, .submit").click ->
+  $(document).on "click", ".discard, .submit", (e) ->
     answer = $(this).parents("li")
     answer.find(".answer-body").show();
     answer.find(".edit-answer-form").hide();

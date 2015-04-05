@@ -1,4 +1,4 @@
-h4.answers-count #{ pluralize(@question.answers.count, 'answer') }
+h4.answers-count #{ pluralize(@answers.count, 'answer') }
 hr.question-divider
 ul.answers-block
   == render @answers
