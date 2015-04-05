@@ -8,7 +8,7 @@ div.show-question-block
     = time_ago_in_words(@question.created_at)
     |  ago by 
     = @question.user.name
-- if @question.answers.any?
+- if @answers.any?
   == render 'answers/answer_list'
 - if user_signed_in?
   hr.question-divider

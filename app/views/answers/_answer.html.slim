@@ -1,6 +1,7 @@
 li
-  div.answer-body id="answer_#{answer.id}"
-    = answer.body
+  div.answer-body
+    span id="answer_#{answer.id}"
+      = answer.body
     - if user_signed_in? && current_user.id == answer.user.id
       = link_to 'Delete answer', [answer.question, answer], method: :delete
       = link_to 'Edit answer', {}, class: "edit-answer"
