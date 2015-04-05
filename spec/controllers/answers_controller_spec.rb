@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
+  let(:another_user) { create(:user) }
   before { sign_in(user) }
 
   describe 'POST #create' do
@@ -112,7 +113,6 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'when current user is not the author' do
-      let(:another_user) { create(:user) }
       before { answer.update_attributes(user: another_user) }
 
       it 'does not delete answer' do
@@ -144,12 +144,14 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #update' do
     let(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
-    before do 
-      patch :update, question_id: question.id, id: answer.id,
-                     answer: { body: 'Edited answer' }, format: :js
-    end
+    let(:patch_request) { patch :update, question_id: question.id, id: answer.id,
+                                  answer: { body: 'Edited answer' }, format: :js }
 
-    context 'when logged in user in the author' do
+    context 'when logged in user is the author' do
+      before do 
+        patch_request
+      end
+
       it 'assigns answer to a variable' do
         expect(assigns(:answer)).to eq answer
       end
@@ -159,19 +161,37 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to eq 'Edited answer'
       end
 
-      it 'assigns question variable' do
-        expect(assigns(:question)).to_not be_nil
-      end
-
       it 'renders update' do
         expect(response).to render_template :update
       end
     end
 
-    context 'when user is not logged in' do
+    context 'when user is not author' do
+      before do 
+        answer.update_attributes(user: another_user) 
+        patch_request
+      end
 
+      it 'does not update record in db' do
+        answer.reload
+        expect(answer.body).to_not eq 'Edited answer'
+      end
     end
 
-    context 'when user is not author'
+    context 'when user is not logged in' do
+      before do 
+        sign_out user
+        patch_request
+      end
+
+      it 'does not update record in db' do
+        answer.reload
+        expect(answer.body).to_not eq 'Edited answer'
+      end
+
+      it 'responds with 401' do
+        expect(response.status).to eq 401
+      end
+    end
   end
 end
