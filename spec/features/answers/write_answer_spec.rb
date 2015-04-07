@@ -1,4 +1,4 @@
-require_relative 'feature_js_config'
+require_relative '../feature_js_config'
 
 feature 'Writing answer', %q{
   In order to help in solving the problem

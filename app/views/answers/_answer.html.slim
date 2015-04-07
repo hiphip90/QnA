@@ -5,6 +5,8 @@ li id="answer_#{answer.id}"
     - if user_signed_in? && current_user.id == answer.user.id
       = link_to 'Delete answer', [answer.question, answer], remote: true, method: :delete
       = link_to 'Edit answer', {}, class: "edit-answer"
+      = link_to 'Accept answer', accept_question_answer_url(answer.question, answer),
+                                                        remote: true, method: :patch
   div.edit-answer-form.conceal
     = form_for [@question, answer], remote: true do |f|
       = f.label :body, 'Edit answer'

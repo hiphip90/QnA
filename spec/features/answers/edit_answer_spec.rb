@@ -1,4 +1,4 @@
-require_relative 'feature_js_config'
+require_relative '../feature_js_config'
 
 feature 'Answer editing', %q{
   In order to improve Answer
