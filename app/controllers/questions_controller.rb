@@ -11,7 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
-    @answers = @question.answers.includes(:user)
+    @answers = @question.answers.order('accepted DESC').includes(:user)
     @answer = Answer.new
   end
   

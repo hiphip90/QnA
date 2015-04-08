@@ -4,4 +4,8 @@ class Question < ActiveRecord::Base
   belongs_to :user
   validates :title, :body, presence: true
   validates :title, length: { maximum: 150 }
+
+  def has_accepted_answer?
+    answers = self.answers.where("accepted = ?", true).first ? true : false
+  end
 end

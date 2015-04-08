@@ -113,6 +113,11 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not delete answer' do
         expect{ delete_answer }.to_not change(Answer, :count)
       end
+
+      it 'it responds with 400' do
+        delete_answer
+        expect(response.status).to eq 400
+      end
     end
 
     context 'when user is not logged in' do
@@ -166,6 +171,10 @@ RSpec.describe AnswersController, type: :controller do
         answer.reload
         expect(answer.body).to_not eq 'Edited answer'
       end
+
+      it 'it responds with 400' do
+        expect(response.status).to eq 400
+      end
     end
 
     context 'when user is not logged in' do
@@ -183,5 +192,59 @@ RSpec.describe AnswersController, type: :controller do
         expect(response.status).to eq 401
       end
     end
+  end
+
+  describe 'PATCH #accept' do 
+    let(:user) { create(:user, :author) }
+    let(:question) { user.questions.last }
+    let(:answers) { create_list(:answer, 5, question: question) }
+    let(:answer) { answers[0] }
+
+    before do
+      sign_in(user)
+    end
+
+    context 'when user is the author of the question' do
+      context 'when there is no accepted answer for question' do
+        before do
+          patch :accept, question_id: question.id, id: answer.id, format: :js
+        end
+
+        it 'assigns answer to a variable' do
+          expect(assigns(:answer)).to eq answer
+        end
+
+        it 'assigns question to a variable' do
+          expect(assigns(:question)).to eq question
+        end 
+
+        it 'sets accepted attr to true' do
+          answer.reload
+          expect(answer.accepted?).to be_truthy
+        end
+
+        it 'renders accept template' do
+          expect(response).to render_template :accept
+        end
+      end
+
+      context 'when there is accepted answer for question' do
+        before do
+          answers[1].update_attributes(accepted: true)
+          patch :accept, question_id: question.id, id: answer.id, format: :js
+        end
+
+        it 'does not chande accepted status' do
+          answer.reload
+          expect(answer.accepted?).to be_falsey
+        end
+
+        it 'it responds with 400' do
+          expect(response.status).to eq 400
+        end
+      end
+    end
+
+    context 'when user is not the author'
   end
 end

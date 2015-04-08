@@ -22,6 +22,8 @@ class AnswersController < ApplicationController
     @question = @answer.question
     if current_user.id == @answer.user.id
       @answer.destroy
+    else
+      render nothing: true, status: :bad_request
     end
   end
 
@@ -29,6 +31,18 @@ class AnswersController < ApplicationController
     @answer = Answer.find(params[:id])
     if current_user.id == @answer.user.id
       @answer.update(answer_params)
+    else
+      render nothing: true, status: :bad_request
+    end
+  end
+
+  def accept
+    @answer = Answer.find(params[:id])
+    @question = Question.find(params[:question_id])
+    if !@question.has_accepted_answer? && current_user == @question.user
+      @answer.update(accepted: true)
+    else
+      render nothing: true, status: :bad_request
     end
   end
 
