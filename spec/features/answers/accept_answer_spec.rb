@@ -9,7 +9,7 @@ feature 'Accepted answer', %q{
   given(:user) { create(:user, :author) }
   given(:other_user) { create(:user) }
   given(:question) { user.questions.last }
-  given!(:answer) { create_list(:answer, 5, question: question, user: user)[-1] }
+  given!(:answer) { create_list(:answer, 5, question: question, user: user)[0] }
 
   scenario 'Author of the question accepts answer', js: true do 
     sign_in_as(user)

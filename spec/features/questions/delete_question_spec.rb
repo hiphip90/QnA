@@ -1,4 +1,4 @@
-require 'rails_helper'
+require_relative '../feature_js_config'
 
 feature 'Question delete process', %q{
   In order to remove duplication
@@ -6,14 +6,13 @@ feature 'Question delete process', %q{
   I must be able to delete my questions
 } do
 
-  background do
-    @user = create(:user, :author)
-    @another_user  = create(:user, :author)
-    sign_in_as(@user)
-  end
+  let(:user) { create(:user, :author) }
+  let(:question) { user.questions.last } 
+  let(:other_user) { create(:user) }
 
   scenario 'User deletes his question' do
-    visit question_path(@user.questions.last)
+    sign_in_as(user)
+    visit question_path(question)
     click_on 'Delete question'
 
     expect(current_path).to eq root_path
@@ -21,16 +20,25 @@ feature 'Question delete process', %q{
   end
 
   scenario 'User tries to delete question from another user' do
-    visit question_path(@another_user.questions.last)
+    sign_in_as(user)
+    question.update(user: other_user)
+    visit question_path(question)
 
     expect(page).to_not have_link 'Delete question'
   end
 
   scenario 'Non-authenticated user tries to delete question' do
-    visit root_path
-    click_on 'Sign Out'
-    visit question_path(@user.questions.last)
+    visit question_path(question)
 
     expect(page).to_not have_link 'Delete question'
+  end
+
+  scenario 'User deletes his question from index', js: true do
+    sign_in_as(user)
+    visit root_path
+    
+    click_on 'Delete question'
+
+    expect(page).to_not have_content question.title
   end
 end

@@ -196,6 +196,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #accept' do 
     let(:user) { create(:user, :author) }
+    let(:other_user) { create(:user) }
     let(:question) { user.questions.last }
     let(:answers) { create_list(:answer, 5, question: question) }
     let(:answer) { answers[0] }
@@ -245,6 +246,20 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
 
-    context 'when user is not the author'
+    context 'when user is not the author' do
+      before do
+        question.update_attributes(user: other_user)
+        patch :accept, question_id: question.id, id: answer.id, format: :js
+      end
+
+      it 'does not chande accepted status' do
+        answer.reload
+        expect(answer.accepted?).to be_falsey
+      end
+
+      it 'it responds with 400' do
+        expect(response.status).to eq 400
+      end
+    end
   end
 end

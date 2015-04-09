@@ -29,9 +29,14 @@ class QuestionsController < ApplicationController
     @question = Question.find(params[:id])
     if current_user.id == @question.user.id
       @question.destroy
-      flash[:success] = "You've successfully deleted a question!"
     end
-    redirect_to root_path
+    respond_to do |format|
+      format.html do
+        flash[:success] = "You've successfully deleted a question!"
+        redirect_to root_path
+      end
+      format.js {}
+    end
   end
 
   private
