@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :destroy]
+  before_action :authenticate_user!, only: [:new, :create, :destroy, :update]
   
   def index
     @questions = Question.includes(:user)
@@ -22,6 +22,15 @@ class QuestionsController < ApplicationController
       redirect_to @question
     else
       render 'new'
+    end
+  end
+
+  def update
+    @question = Question.find(params[:id])
+    if @question.user.id == current_user.id
+      @question.update(question_params)
+    else
+      render nothing: true, status: 400
     end
   end
 
