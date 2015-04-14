@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
   def destroy
     @answer = Answer.find(params[:id])
     @question = @answer.question
-    if current_user.id == @answer.user.id
+    if current_user.id == @answer.user_id
       @answer.destroy
     else
       render nothing: true, status: :bad_request
@@ -29,7 +29,7 @@ class AnswersController < ApplicationController
 
   def update
     @answer = Answer.find(params[:id])
-    if current_user.id == @answer.user.id
+    if current_user.id == @answer.user_id
       @answer.update(answer_params)
     else
       render nothing: true, status: :bad_request
@@ -39,7 +39,7 @@ class AnswersController < ApplicationController
   def accept
     @answer = Answer.find(params[:id])
     @question = Question.find(params[:question_id])
-    if !@question.has_accepted_answer? && current_user == @question.user
+    if !@question.has_accepted_answer? && current_user.id == @question.user_id
       @answer.update(accepted: true)
     else
       render nothing: true, status: :bad_request

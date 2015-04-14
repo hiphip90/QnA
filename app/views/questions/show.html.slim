@@ -1,7 +1,7 @@
 div.show-question-block
   h1.page-header == @question.title
   p.question-body == @question.body
-  - if user_signed_in? && current_user.id == @question.user.id
+  - if user_signed_in? && current_user.id == @question.user_id
     span.delete-link = link_to 'Delete question', @question, method: :delete
     |  
     span.edit-link = link_to 'Edit question', {}, class: 'edit-question-link'

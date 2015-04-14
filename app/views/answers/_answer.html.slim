@@ -2,10 +2,10 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
   div.answer-body
     span
       = answer.body
-    - if user_signed_in? && current_user.id == answer.user.id
+    - if user_signed_in? && current_user.id == answer.user_id
       = link_to 'Delete answer', [@question, answer], remote: true, method: :delete
       = link_to 'Edit answer', {}, class: "edit-answer"
-    - if user_signed_in? && current_user.id == @question.user.id && !@question.has_accepted_answer?
+    - if user_signed_in? && current_user.id == @question.user_id && !@question.has_accepted_answer?
       = link_to 'Accept answer', accept_question_answer_url(@question, answer),
                                                         remote: true, method: :patch, class: 'accept-answer'
   div.edit-answer-form.conceal
