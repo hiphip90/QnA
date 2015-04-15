@@ -45,6 +45,20 @@ feature 'Answer editing', %q{
     end
   end
 
+  scenario 'Authenticated user edits answer incorrectly', js: true do
+    sign_in_as(user)
+    visit question_path(user.questions.last)
+
+    within '.answers-block' do
+      click_on 'Edit answer'
+      fill_in 'Edit answer', with: ''
+      click_on 'Save'
+
+      expect(page).to have_selector('textarea')
+      expect(page).to have_content("Body can't be blank")
+    end
+  end
+
   scenario 'Authenticated user discards changes', js: true do
     sign_in_as(user)
     visit question_path(user.questions.last)

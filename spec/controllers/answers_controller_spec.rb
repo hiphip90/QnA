@@ -206,43 +206,25 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     context 'when user is the author of the question' do
-      context 'when there is no accepted answer for question' do
-        before do
-          patch :accept, question_id: question.id, id: answer.id, format: :js
-        end
-
-        it 'assigns answer to a variable' do
-          expect(assigns(:answer)).to eq answer
-        end
-
-        it 'assigns question to a variable' do
-          expect(assigns(:question)).to eq question
-        end 
-
-        it 'sets accepted attr to true' do
-          answer.reload
-          expect(answer.accepted?).to be_truthy
-        end
-
-        it 'renders accept template' do
-          expect(response).to render_template :accept
-        end
+      before do
+        patch :accept, question_id: question.id, id: answer.id, format: :js
       end
 
-      context 'when there is accepted answer for question' do
-        before do
-          answers[1].update_attributes(accepted: true)
-          patch :accept, question_id: question.id, id: answer.id, format: :js
-        end
+      it 'assigns answer to a variable' do
+        expect(assigns(:answer)).to eq answer
+      end
 
-        it 'does not chande accepted status' do
-          answer.reload
-          expect(answer.accepted?).to be_falsey
-        end
+      it 'assigns question to a variable' do
+        expect(assigns(:question)).to eq question
+      end 
 
-        it 'it responds with 400' do
-          expect(response.status).to eq 400
-        end
+      it 'sets accepted attr to true' do
+        answer.reload
+        expect(answer.accepted?).to be_truthy
+      end
+
+      it 'renders accept template' do
+        expect(response).to render_template :accept
       end
     end
 

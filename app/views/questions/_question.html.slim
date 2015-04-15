@@ -13,7 +13,7 @@ div.question id="question_#{question.id}"
     span.created-by
       | by 
       = question.user.name
-    - if question.user_id == current_user.id
+    - if user_signed_in? && question.user_id == current_user.id
       br
       span
         = link_to 'Delete question', question, method: :delete, remote: true, class: 'delete-link'

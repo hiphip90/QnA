@@ -39,9 +39,7 @@ class AnswersController < ApplicationController
   def accept
     @answer = Answer.find(params[:id])
     @question = Question.find(params[:question_id])
-    if !@question.has_accepted_answer? && current_user.id == @question.user_id
-      @answer.update(accepted: true)
-    else
+    unless current_user.id == @question.user_id && @question.accept(@answer)
       render nothing: true, status: :bad_request
     end
   end
