@@ -22,8 +22,7 @@ p
       .form-group
         = f.submit 'Save changes', class: 'btn btn-primary'
         = f.button 'Discard', class: 'question-discard', type: 'button'
-- if @answers.any?
-  == render 'answers/answer_list'
+== render 'answers/answer_list'
 - if user_signed_in?
   hr.question-divider
   h4 Your answer
