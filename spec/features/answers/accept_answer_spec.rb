@@ -28,6 +28,21 @@ feature 'Accepted answer', %q{
     expect(page).to have_selector("li:first-child span", text: answer.body)
   end
 
+  scenario 'Author accepts another answer', js: true do
+    sign_in_as(user)
+    other_answer = question.answers.where('id != ?', answer.id).first
+    other_answer.update(accepted: true)
+    visit question_path(question)
+
+    expect(page).to have_selector('.accepted')
+    within("#answer_#{answer.id}") do
+      click_on 'Accept answer'
+    end
+
+    expect(page).to have_selector("li:first-child span", text: answer.body)
+    expect(page).to_not have_selector("#answer_#{other_answer.id}.accepted")
+  end
+
   scenario 'Non-author tries to accept answer' do 
     sign_in_as(user)
     question.update(user: other_user)
