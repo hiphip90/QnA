@@ -1,7 +1,7 @@
 h1 New question
 .row
   .col-md-6.col-md-offset-3
-    = form_for @question do |f|
+    = nested_form_for @question do |f|
       = render 'shared/error_messages', object: f.object
       .form-group
         = f.label :title
@@ -14,5 +14,8 @@ h1 New question
         = f.fields_for :attachments do |field|
           = field.label :file
           = field.file_field :file
+          = field.link_to_remove "Remove this attachment"
+        p
+          = f.link_to_add "Moar files!", :attachments
       .form-group
         = f.submit 'Create question', class: 'btn btn-primary'

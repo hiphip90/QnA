@@ -31,6 +31,7 @@ gem 'faker'
 gem 'devise'
 gem 'carrierwave'
 gem 'remotipart'
+gem "nested_form"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

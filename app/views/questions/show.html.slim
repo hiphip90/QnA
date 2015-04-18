@@ -32,14 +32,17 @@ p
   h4 Your answer
   div.row
     div.col-md-4
-      = form_for [@question, @answer], remote: true do |f|
+      = nested_form_for [@question, @answer], remote: true do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body
           = f.text_area :body, class: 'form-control'
-        div.form-group
+        div.form-group#attachments
           = f.fields_for :attachments do |field|
             = field.label :file
             = field.file_field :file
+            = field.link_to_remove "Remove this attachment"
+          p
+            = f.link_to_add "Moar files!", :attachments
         div.form-group
           = f.submit 'Post answer', class: 'btn btn-primary'
