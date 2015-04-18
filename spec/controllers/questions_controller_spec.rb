@@ -162,4 +162,49 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    let(:user) { create(:user, :author) }
+    let(:question) { user.questions.last }
+    let(:other_user) { create(:user) }
+
+    before do
+      sign_in(user)
+    end
+
+    context 'when current user is an author' do
+      before do
+        patch :update, id: question.id, question: { title: "Edited title", body: "Edited body" }, format: :js
+      end
+
+      it 'updates question in db' do
+        question.reload
+
+        expect(question.title).to eq "Edited title"
+        expect(question.body).to eq "Edited body"
+      end
+
+      it 'renders update template' do
+        expect(response).to render_template :update
+      end
+    end
+
+    context 'when current user is not an author' do
+      before do
+        question.update(user: other_user)
+        patch :update, id: question.id, question: { title: "Edited title", body: "Edited body" }, format: :js
+      end
+
+      it 'does not update question in db' do
+        question.reload
+
+        expect(question.title).to_not eq "Edited title"
+        expect(question.body).to_not eq "Edited body"
+      end
+
+      it 'responds with 400' do
+        expect(response.status).to eq 400
+      end
+    end
+  end
 end

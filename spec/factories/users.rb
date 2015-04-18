@@ -10,7 +10,7 @@ FactoryGirl.define do
     end
     trait :author do
       after(:create) do |user|
-        user.questions.create(attributes_for(:question))
+        create(:question, user: user)
       end
     end
   end

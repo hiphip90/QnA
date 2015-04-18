@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   def create
     @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params)
+    @answers = @question.answers.includes(:user)
     @answer.user = current_user
 
     respond_to do |format|
@@ -18,11 +19,30 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer = Answer.find(params[:id])
-    if current_user.id == @answer.user.id
+    @question = @answer.question
+    if current_user.id == @answer.user_id
       @answer.destroy
-      redirect_to @answer.question
     else
-      redirect_to root_path
+      render nothing: true, status: :bad_request
+    end
+  end
+
+  def update
+    @answer = Answer.find(params[:id])
+    if current_user.id == @answer.user_id
+      @answer.update(answer_params)
+    else
+      render nothing: true, status: :bad_request
+    end
+  end
+
+  def accept
+    @answer = Answer.find(params[:id])
+    @question = Question.find(params[:question_id])
+    if current_user.id == @question.user_id
+      @answer.accept
+    else
+      render nothing: true, status: :bad_request
     end
   end
 

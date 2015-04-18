@@ -1,4 +1,4 @@
-require_relative 'feature_js_config'
+require_relative '../feature_js_config'
 
 feature 'Delete answer process', %q{
   In order to delete bad answer

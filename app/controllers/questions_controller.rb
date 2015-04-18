@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :destroy]
+  before_action :authenticate_user!, only: [:new, :create, :destroy, :update]
   
   def index
-    @questions = Question.all
+    @questions = Question.includes(:user)
   end
 
   def new
@@ -11,6 +11,7 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
+    @answers = @question.answers.order('accepted DESC').includes(:user)
     @answer = Answer.new
   end
   
@@ -24,13 +25,27 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def update
+    @question = Question.find(params[:id])
+    if @question.user_id == current_user.id
+      @question.update(question_params)
+    else
+      render nothing: true, status: 400
+    end
+  end
+
   def destroy
     @question = Question.find(params[:id])
-    if current_user.id == @question.user.id
+    if @question.user_id == current_user.id
       @question.destroy
-      flash[:success] = "You've successfully deleted a question!"
     end
-    redirect_to root_path
+    respond_to do |format|
+      format.html do
+        flash[:success] = "You've successfully deleted a question!"
+        redirect_to root_path
+      end
+      format.js {}
+    end
   end
 
   private

@@ -1,5 +1,6 @@
 FactoryGirl.define do  
   factory :answer do
-    body "42"
+    sequence(:body) { |n| "Answer_##{n}" }
+    accepted false
   end
 end

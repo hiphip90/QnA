@@ -1,4 +1,4 @@
-div.question
+div.question id="question_#{question.id}"
   div.question-block
     h3
       = link_to question.title, question
@@ -13,3 +13,7 @@ div.question
     span.created-by
       | by 
       = question.user.name
+    - if user_signed_in? && question.user_id == current_user.id
+      br
+      span
+        = link_to 'Delete question', question, method: :delete, remote: true, class: 'delete-link'

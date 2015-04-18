@@ -1,4 +1,16 @@
-li
-  p.answer-body = answer.body
-  - if user_signed_in? && current_user.id == answer.user.id
-    = link_to 'Delete answer', [answer.question, answer], method: :delete
+li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
+  div.answer-body
+    span
+      = answer.body
+    - if user_signed_in? && current_user.id == answer.user_id
+      = link_to 'Delete answer', [@question, answer], remote: true, method: :delete
+      = link_to 'Edit answer', {}, class: "edit-answer"
+    - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
+      = link_to 'Accept answer', accept_question_answer_url(@question, answer),
+                                                        remote: true, method: :patch, class: 'accept-answer'
+  div.edit-answer-form.conceal
+    = form_for [@question, answer], remote: true do |f|
+      = f.label :body, 'Edit answer'
+      = f.text_area :body
+      = f.submit 'Save', class: 'submit'
+      = f.button 'Discard', class: 'discard', type: 'button'
