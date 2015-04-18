@@ -58,6 +58,10 @@ RSpec.describe QuestionsController, type: :controller do
     it 'assigns blank new answer to a variable' do
       expect(assigns(:answer)).to_not be_nil
     end
+
+    it 'assigns new attachment for answer' do
+      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
+    end
   end
 
   describe 'POST #create' do

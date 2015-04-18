@@ -14,7 +14,7 @@ feature 'Add files to answer', %q{
     visit question_path(question)
   end
 
-  scenario 'add files on creation' do
+  scenario 'add files on creation', js: true do
     fill_in 'Body', with: 'Answer with files'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
 

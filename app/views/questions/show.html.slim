@@ -38,4 +38,8 @@ p
           = f.label :body
           = f.text_area :body, class: 'form-control'
         div.form-group
+          = f.fields_for :attachments do |field|
+            = field.label :file
+            = field.file_field :file
+        div.form-group
           = f.submit 'Post answer', class: 'btn btn-primary'
