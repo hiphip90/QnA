@@ -6,4 +6,5 @@ $('#error_explanation').remove();
   $('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>");
   $('.answers-block').append('<%= j render(@answer) %>');
   $('#new_answer').find('#answer_body').val('');
+  $('#new_answer').find('.fields').not(':first-child').remove();
 <% end %>
