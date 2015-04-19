@@ -1,10 +1,10 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
+  before_action :get_answer, only: [:destroy, :update, :accept]
   
   def create
     @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params)
-    @answers = @question.answers.includes(:user)
     @answer.user = current_user
 
     respond_to do |format|
@@ -18,7 +18,6 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer = Answer.find(params[:id])
     @question = @answer.question
     if current_user.id == @answer.user_id
       @answer.destroy
@@ -28,7 +27,6 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer = Answer.find(params[:id])
     if current_user.id == @answer.user_id
       @answer.update(answer_params)
     else
@@ -37,7 +35,6 @@ class AnswersController < ApplicationController
   end
 
   def accept
-    @answer = Answer.find(params[:id])
     @question = Question.find(params[:question_id])
     if current_user.id == @question.user_id
       @answer.accept
@@ -49,5 +46,9 @@ class AnswersController < ApplicationController
   private
     def answer_params
       params.require(:answer).permit(:body, attachments_attributes: [:file, :_destroy])
+    end
+
+    def get_answer
+      @answer = Answer.find(params[:id])
     end
 end

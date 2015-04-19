@@ -16,13 +16,20 @@ div.show-question-block
     = @question.user.name
 p
   div.edit-question-form.conceal
-    = form_for @question, remote: true do |f|
+    = nested_form_for @question, remote: true do |f|
       .field.form-group
         = f.label :title
         = f.text_field :title, class: 'form-control'
       .field.form-group
         = f.label :body, 'Question'
         = f.text_area :body, class: 'form-control'
+      div.form-group
+        = f.fields_for :attachments do |field|
+          = field.label :file
+          = field.file_field :file
+          = field.link_to_remove "Remove this attachment"
+        p
+          = f.link_to_add "Moar files!", :attachments
       .form-group
         = f.submit 'Save changes', class: 'btn btn-primary'
         = f.button 'Discard', class: 'question-discard', type: 'button'
@@ -32,17 +39,16 @@ p
   h4 Your answer
   div.row
     div.col-md-4
-      = nested_form_for [@question, @answer], remote: true do |f|
+      = nested_form_for [@question, @answer], remote: true, model_object: @answer.attachments do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body
           = f.text_area :body, class: 'form-control'
-        div.form-group#attachments
+        div.form-group
           = f.fields_for :attachments do |field|
             = field.label :file
             = field.file_field :file
             = field.link_to_remove "Remove this attachment"
-          p
-            = f.link_to_add "Moar files!", :attachments
+          = f.link_to_add "Moar files!", :attachments
         div.form-group
           = f.submit 'Post answer', class: 'btn btn-primary'

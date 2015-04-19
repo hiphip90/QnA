@@ -1,7 +1,7 @@
 class Answer < ActiveRecord::Base
   belongs_to :question
   belongs_to :user
-  has_many :attachments, as: :attachable
+  has_many :attachments, as: :attachable, dependent: :destroy
 
   validates :body, presence: true
   default_scope { order('accepted DESC, created_at DESC') }
