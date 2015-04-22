@@ -13,13 +13,15 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
       = link_to 'Accept answer', accept_question_answer_url(@question, answer),
                                                         remote: true, method: :patch, class: 'accept-answer', href: '#'
   div.edit-answer-form.conceal
-    = form_for [@question, answer], remote: true do |f|
+    = form_for [@question, answer], remote: true, namespace: "#{dom_id(answer)}" do |f|
       = f.label :body, 'Edit answer'
       = f.text_area :body
-      div.form-group
+      .form-group
+        = f.submit 'Save', class: 'submit'
+        = f.button 'Discard', class: 'discard', type: 'button'
+      #attachments.form-group
         = f.fields_for :attachments do |field|
           = render 'attachment_fields', f: field
         .links
           = link_to_add_association "Moar files!", f, :attachments
-      = f.submit 'Save', class: 'submit'
-      = f.button 'Discard', class: 'discard', type: 'button'
+      

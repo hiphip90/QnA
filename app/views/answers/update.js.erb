@@ -2,6 +2,5 @@ var answer_item = $('#<%= dom_id(@answer) %>');
 <% if @answer.errors.any? %>
   answer_item.find('.edit-answer-form').prepend("<%= j render 'shared/error_messages', object: @answer %>");
 <% else %>
-  console.log('<%= j(render @answer).html_safe %>')
-  answer_item.replaceWith('<%= j(render @answer) %>');
+  answer_item.replaceWith('<%= j(h(render @answer)) %>');
 <% end %> 
