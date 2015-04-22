@@ -8,20 +8,18 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
 
     - if user_signed_in? && current_user.id == answer.user_id
       = link_to 'Delete answer', [@question, answer], remote: true, method: :delete
-      = link_to 'Edit answer', {}, class: "edit-answer"
+      = link_to 'Edit answer', {}, class: "edit-answer", href: '#'
     - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
       = link_to 'Accept answer', accept_question_answer_url(@question, answer),
-                                                        remote: true, method: :patch, class: 'accept-answer'
+                                                        remote: true, method: :patch, class: 'accept-answer', href: '#'
   div.edit-answer-form.conceal
-    = nested_form_for [@question, answer], remote: true do |f|
+    = form_for [@question, answer], remote: true do |f|
       = f.label :body, 'Edit answer'
       = f.text_area :body
       div.form-group
         = f.fields_for :attachments do |field|
-          = field.label :file
-          = field.file_field :file
-          = field.link_to_remove "Remove this attachment"
-        p
-          = f.link_to_add "Moar files!", :attachments
+          = render 'attachment_fields', f: field
+        .links
+          = link_to_add_association "Moar files!", f, :attachments
       = f.submit 'Save', class: 'submit'
       = f.button 'Discard', class: 'discard', type: 'button'

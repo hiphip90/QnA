@@ -1,9 +1,7 @@
-var answer_item;
-answer_item = $('#<%= dom_id(@answer) %>');
+var answer_item = $('#<%= dom_id(@answer) %>');
 <% if @answer.errors.any? %>
   answer_item.find('.edit-answer-form').prepend("<%= j render 'shared/error_messages', object: @answer %>");
 <% else %>
-  answer_item.find('span').text('<%= j @answer.body %>');
-  answer_item.find('.answer-body').show();
-  answer_item.find('.edit-answer-form').hide();
-<% end %>
+  console.log('<%= j(render @answer).html_safe %>')
+  answer_item.replaceWith('<%= j(render @answer) %>');
+<% end %> 

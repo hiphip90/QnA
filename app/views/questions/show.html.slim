@@ -1,54 +1,20 @@
-div.show-question-block
-  h1.page-header == @question.title
-  p.question-body == @question.body
-  p.attachments Attachments:
-  ul
-    - @question.attachments.each do |a|
-      li = link_to a.file.identifier, a.file.url
-  - if user_signed_in? && current_user.id == @question.user_id
-    span.delete-link = link_to 'Delete question', @question, method: :delete
-    |  
-    span.edit-link = link_to 'Edit question', {}, class: 'edit-question-link'
-  span.pull-right.user-info
-    | asked 
-    = time_ago_in_words(@question.created_at)
-    |  ago by 
-    = @question.user.name
-p
-  div.edit-question-form.conceal
-    = nested_form_for @question, remote: true do |f|
-      .field.form-group
-        = f.label :title
-        = f.text_field :title, class: 'form-control'
-      .field.form-group
-        = f.label :body, 'Question'
-        = f.text_area :body, class: 'form-control'
-      div.form-group
-        = f.fields_for :attachments do |field|
-          = field.label :file
-          = field.file_field :file
-          = field.link_to_remove "Remove this attachment"
-        p
-          = f.link_to_add "Moar files!", :attachments
-      .form-group
-        = f.submit 'Save changes', class: 'btn btn-primary'
-        = f.button 'Discard', class: 'question-discard', type: 'button'
+.question
+  == render 'question_block', question: @question
 == render 'answers/answer_list'
 - if user_signed_in?
   hr.question-divider
   h4 Your answer
   div.row
     div.col-md-4
-      = nested_form_for [@question, @answer], remote: true, model_object: @answer.attachments do |f|
+      = form_for [@question, @answer], remote: true, model_object: @answer.attachments do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body
           = f.text_area :body, class: 'form-control'
         div.form-group
           = f.fields_for :attachments do |field|
-            = field.label :file
-            = field.file_field :file
-            = field.link_to_remove "Remove this attachment"
-          = f.link_to_add "Moar files!", :attachments
+            = render 'attachment_fields', f: field
+          .links
+            = link_to_add_association "Moar files!", f, :attachments
         div.form-group
           = f.submit 'Post answer', class: 'btn btn-primary'
