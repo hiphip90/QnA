@@ -4,7 +4,11 @@ $('#error_explanation').remove();
 <% else %>
   $('.answers').show();
   $('.answers-count').text("<%= pluralize(@question.answers.count, 'answer') %>");
-  $('.answers-block').append('<%= raw(j(render @answer)) %>');
+  <% if remotipart_submitted? %>
+    $('.answers-block').append('<%= j "#{render @answer}" %>');
+  <% else %>   
+    $('.answers-block').append('<%= j render @answer %>');
+  <% end %>
   $('#new_answer').find('#answer_body').val('');
   $('#new_answer').find('.fields').not(':first-child').remove();
 <% end %>
