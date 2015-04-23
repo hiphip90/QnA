@@ -11,7 +11,7 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
       = link_to 'Edit answer', {}, class: "edit-answer", href: '#'
     - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
       = link_to 'Accept answer', accept_question_answer_url(@question, answer),
-                                                        remote: true, method: :patch, class: 'accept-answer', href: '#'
+                                                        remote: true, method: :patch, class: 'accept-answer'
   div.edit-answer-form.conceal
     = form_for [@question, answer], remote: true, namespace: "#{dom_id(answer)}" do |f|
       = f.label :body, 'Edit answer'

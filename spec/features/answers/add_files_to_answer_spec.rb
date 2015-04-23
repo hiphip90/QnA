@@ -18,7 +18,7 @@ feature 'Add files to answer', %q{
     fill_in 'Body', with: 'Answer with files'
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_link 'Moar files'
-    within '.new_answer .fields:not(:first-child)' do
+    within '.new_answer .nested-fields:not(:first-child)' do
       attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
     end
 
