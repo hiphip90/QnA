@@ -23,8 +23,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'responds with json of answer' do
         post_valid
-        answer = Answer.last
-        expect(response.body).to eq answer.to_json
+        expect(response.body).to eq assigns(:answer).to_json
       end
     end
 
@@ -33,9 +32,14 @@ RSpec.describe AnswersController, type: :controller do
         expect{ post_invalid }.to_not change(Answer, :count)
       end
 
-      it 'unswers with 422' do
+      it 'responds with 422' do
         post_invalid
         expect(response.status).to eq 422
+      end
+
+      it 'responds with json of errors' do
+        post_invalid
+        expect(response.body).to eq assigns(:answer).errors.full_messages.to_json
       end
     end
 

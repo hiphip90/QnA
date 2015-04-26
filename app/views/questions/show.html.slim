@@ -6,7 +6,7 @@
   h4 Your answer
   div.row
     div.col-md-4
-      = form_for [@question, @answer], remote: true, model_object: @answer.attachments do |f|
+      = form_for [@question, @answer], remote: true, data: { type: :json } do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body
