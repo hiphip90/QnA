@@ -12,6 +12,7 @@
 !/log/.keep
 /tmp
 
-questions
-
 config/database.yml
+
+# Ignore local uploads
+public/uploads

@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :destroy, :update]
+  before_action :get_question, only: [:show, :update, :destroy]
   
   def index
     @questions = Question.includes(:user)
@@ -7,12 +8,13 @@ class QuestionsController < ApplicationController
 
   def new
     @question = Question.new
+    @question.attachments.build
   end
 
   def show
-    @question = Question.find(params[:id])
     @answers = @question.answers.order('accepted DESC').includes(:user)
     @answer = Answer.new
+    @answer.attachments.build
   end
   
   def create
@@ -26,7 +28,6 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question = Question.find(params[:id])
     if @question.user_id == current_user.id
       @question.update(question_params)
     else
@@ -35,7 +36,6 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    @question = Question.find(params[:id])
     if @question.user_id == current_user.id
       @question.destroy
     end
@@ -50,6 +50,10 @@ class QuestionsController < ApplicationController
 
   private
     def question_params
-      params.require(:question).permit(:title, :body)
+      params.require(:question).permit(:title, :body, attachments_attributes: [:id, :file, :_destroy])
+    end
+
+    def get_question
+      @question = Question.find(params[:id])
     end
 end

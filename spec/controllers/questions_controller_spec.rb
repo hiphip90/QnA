@@ -26,6 +26,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to_not be_nil
     end
 
+    it 'assigns new attachment' do
+      expect(assigns(:question).attachments.first).to be_a_new(Attachment)
+    end
+
     it 'renders new view' do
       expect(response).to render_template(:new)
     end
@@ -53,6 +57,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns blank new answer to a variable' do
       expect(assigns(:answer)).to_not be_nil
+    end
+
+    it 'assigns new attachment for answer' do
+      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
     end
   end
 

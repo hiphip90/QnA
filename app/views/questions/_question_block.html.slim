@@ -1,0 +1,34 @@
+div.show-question-block
+  h1.page-header == question.title
+  p.question-body == question.body
+  p.attachments Attachments:
+  ul
+    - question.attachments.each do |a|
+      li = link_to a.file.identifier, a.file.url
+  - if user_signed_in? && current_user.id == question.user_id
+    span.delete-link = link_to 'Delete question', question, method: :delete
+    |  
+    span.edit-link = link_to 'Edit question', {}, class: 'edit-question-link'
+  span.pull-right.user-info
+    | asked 
+    = time_ago_in_words(question.created_at)
+    |  ago by 
+    = question.user.name
+p
+  div.edit-question-form.conceal
+    = form_for question, remote: true do |f|
+      .field.form-group
+        = f.label :title
+        = f.text_field :title, class: 'form-control'
+      .field.form-group
+        = f.label :body, 'Question'
+        = f.text_area :body, class: 'form-control'
+      div.form-group
+        = f.fields_for :attachments do |field|
+          = render 'attachment_fields', f: field
+        p.links
+          = link_to_add_association "Moar files!", f, :attachments
+      .form-group
+        = f.submit 'Save changes', class: 'btn btn-primary'
+        = f.button 'Discard', class: 'question-discard', type: 'button'
+        
