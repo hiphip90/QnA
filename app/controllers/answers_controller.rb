@@ -9,11 +9,10 @@ class AnswersController < ApplicationController
 
     respond_to do |format|
       if @answer.save
-        format.html { redirect_to @question }
+        format.json { render json: @answer }
       else
-        format.html { render 'questions/show' }
+        format.json { render nothing: true, status: :unprocessable_entity }
       end
-      format.js {}
     end
   end
 
