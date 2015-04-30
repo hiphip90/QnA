@@ -97,7 +97,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
     let(:patch_request) { patch :update, question_id: question.id, id: answer.id,
-                                  answer: { body: 'Edited answer' }, format: :js }
+                                  answer: { body: 'Edited answer' }, format: :json }
 
     context 'when logged in user is the author' do
       before do 
@@ -111,10 +111,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes answers body' do
         answer.reload
         expect(answer.body).to eq 'Edited answer'
-      end
-
-      it 'renders update' do
-        expect(response).to render_template :update
       end
     end
 

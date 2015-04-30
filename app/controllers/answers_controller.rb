@@ -9,7 +9,7 @@ class AnswersController < ApplicationController
 
     respond_to do |format|
       if @answer.save
-        format.json {}
+        format.json { render 'answer' }
       else
         format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
       end
@@ -27,10 +27,17 @@ class AnswersController < ApplicationController
 
   def update
     @question = @answer.question
-    if current_user.id == @answer.user_id
-      @answer.update(answer_params)
-    else
-      render nothing: true, status: :bad_request
+
+    respond_to do |format|
+      if current_user.id == @answer.user_id
+        if @answer.update(answer_params)
+          format.json { render 'answer' }
+        else
+          format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
+        end
+      else
+        format.json { render nothing: true, status: :bad_request }
+      end
     end
   end
 
