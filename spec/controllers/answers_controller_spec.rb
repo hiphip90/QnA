@@ -20,11 +20,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'associates it with a current user' do
         expect{ post_valid }.to change(user.answers, :count).by(1)
       end
-
-      it 'responds with json of answer' do
-        post_valid
-        expect(response.body).to eq assigns(:answer).to_json
-      end
     end
 
     context 'with invalid info' do

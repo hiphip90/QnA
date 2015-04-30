@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/jfirebaugh/skim.git
+  revision: ca1e39fae0f957634575d6f8b53c5d66fda7f925
+  specs:
+    skim (0.9.3)
+      coffee-script
+      coffee-script-source (>= 1.2.0)
+      slim (>= 3.0)
+      sprockets (>= 2, <= 3.0.0.rc1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -36,6 +46,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    acts_as_votable (0.10.0)
     addressable (2.3.8)
     arel (6.0.0)
     autoprefixer-rails (5.1.11)
@@ -54,7 +65,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    capybara-webkit (1.5.0)
+    capybara-webkit (1.5.1)
       capybara (>= 2.3.0, < 2.5.0)
       json
     carrierwave (0.10.0)
@@ -132,9 +143,9 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     method_source (0.8.2)
-    mime-types (2.4.3)
+    mime-types (2.5)
     mini_portile (0.6.2)
-    minitest (5.6.0)
+    minitest (5.6.1)
     multi_json (1.11.0)
     nenv (0.2.0)
     nokogiri (1.6.6.2)
@@ -206,7 +217,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     sass (3.4.13)
-    sass-rails (5.0.3)
+    sass-rails (5.0.0)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.1)
       sprockets (>= 2.8, < 4.0)
@@ -229,7 +240,7 @@ GEM
       slim (~> 3.0)
     slop (3.6.0)
     spring (1.3.4)
-    sprockets (3.0.1)
+    sprockets (3.0.0.rc.1)
       rack (~> 1.0)
     sprockets-rails (2.2.4)
       actionpack (>= 3.0)
@@ -260,6 +271,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts_as_votable (~> 0.10.0)
   bootstrap-sass (~> 3.3.3)
   capybara
   capybara-webkit
@@ -279,9 +291,11 @@ DEPENDENCIES
   rails (= 4.2.0)
   remotipart
   rspec-rails
+  sass
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   shoulda-matchers
+  skim!
   slim-rails
   spring
   uglifier (>= 1.3.0)
