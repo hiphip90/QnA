@@ -2,7 +2,7 @@ module Voting
   extend ActiveSupport::Concern
 
   included do
-    before_action :get_votable, only: [:upvote, :downvote]
+    before_action :get_votable, only: [:upvote, :downvote, :recall_vote]
   end
 
   def upvote
@@ -12,6 +12,11 @@ module Voting
 
   def downvote
     current_user.downvote @votable
+    render :vote
+  end
+
+  def recall_vote
+    current_user.recall_vote @votable
     render :vote
   end
 

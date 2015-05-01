@@ -48,3 +48,11 @@ $ ->
     answer = $("#answer_#{response.id}");
     answer.find('.rating').text(response.rating);
     answer.find('.upvote-link, .downvote-link').hide();
+    answer.find('.recall-vote').show();
+
+  $(document).on 'ajax:success', '.recall-vote', (e, data, status, xhr) ->
+    response = $.parseJSON(xhr.responseText);
+    answer = $("#answer_#{response.id}");
+    answer.find('.rating').text(response.rating);
+    answer.find('.upvote-link, .downvote-link').show();
+    answer.find('.recall-vote').hide();

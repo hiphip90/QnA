@@ -30,5 +30,10 @@ module Votes
       return true if votes.where(votable: object).any?
       false
     end
+
+    def recall_vote(object)
+      votes = self.votes.where(votable: object)
+      votes.destroy_all if votes.any?
+    end
   end
 end

@@ -245,4 +245,29 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #recall_vote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:recall_vote) { patch :recall_vote, question_id: question.id, id: answer.id, format: :json }
+
+    before { user.upvote(answer) }
+
+    it 'deletes users vote' do
+      expect{ recall_vote }.to change(user.votes, :count).by -1
+    end
+
+    it 'deletes correct vote' do
+      expect{ recall_vote }.to change(answer.votes, :count).by -1
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+  end
 end

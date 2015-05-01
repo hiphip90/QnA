@@ -67,4 +67,12 @@ shared_examples_for 'voter' do
       expect(voter.has_voted_for?(votable)).to be_falsey
     end
   end
+
+  describe '#recall_vote' do
+    it 'destroys votes for give obj' do
+      voter.upvote votable
+      voter.recall_vote(votable)
+      expect(voter.votes.where(votable: votable).any?).to be_falsey
+    end
+  end
 end

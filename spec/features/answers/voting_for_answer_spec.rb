@@ -54,10 +54,17 @@ feature 'Voting for answer', %q{
 
     within ('.answers') do
       click_link 'Downvote'
-      expect('.rating').to have_content '-1'
+
+      within ('.rating') do
+        expect(page).to have_content '-1'
+      end
 
       click_link 'Recall vote'
-      expect('.rating').to have_content '0'
+
+      within ('.rating') do
+        expect(page).to have_content '0'
+      end
+
       expect(page).to have_content('Upvote')
       expect(page).to have_content('Downvote')
     end
