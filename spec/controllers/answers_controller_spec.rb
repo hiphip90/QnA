@@ -187,13 +187,61 @@ RSpec.describe AnswersController, type: :controller do
         patch :accept, question_id: question.id, id: answer.id, format: :js
       end
 
-      it 'does not chande accepted status' do
+      it 'does not change accepted status' do
         answer.reload
         expect(answer.accepted?).to be_falsey
       end
 
       it 'it responds with 400' do
         expect(response.status).to eq 400
+      end
+    end
+  end
+
+  describe 'PATCH #upvote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:upvote) { patch :upvote, question_id: question.id, id: answer.id, format: :json }
+
+    it 'increases the answers rating' do
+      expect{upvote}.to change(answer, :rating).by 1
+    end
+
+    it 'renders vote template' do
+      upvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{upvote}.to_not change(answer, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #downvote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:downvote) { patch :downvote, question_id: question.id, id: answer.id, format: :json }
+
+    it 'decreases the answers rating' do
+      expect{downvote}.to change(answer, :rating).by -1
+    end
+
+    it 'renders vote template' do
+      downvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{downvote}.to_not change(answer, :rating)
       end
     end
   end

@@ -7,8 +7,8 @@ feature 'Voting for answer', %q{
 } do
 
   let(:user) { create(:user) }
-  let(:question) { create(:question) }
-  let!(:answer) { create(:answer, question: question) }
+  let(:question) { create(:question, :with_answer) }
+  let(:answer) { question.answers.last }
   
   background do
     sign_in_as(user)
@@ -19,7 +19,10 @@ feature 'Voting for answer', %q{
 
     within ('.answers') do
       click_link 'Upvote'
-      expect('.rating').to have_content '1'
+
+      within ('.rating') do
+        expect(page).to have_content '1'
+      end
     end
   end
 
@@ -28,7 +31,10 @@ feature 'Voting for answer', %q{
 
     within ('.answers') do
       click_link 'Downvote'
-      expect('.rating').to have_content '-1'
+      
+      within ('.rating') do
+        expect(page).to have_content '-1'
+      end
     end
   end
 

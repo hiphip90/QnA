@@ -1,4 +1,4 @@
-json.extract! @answer, :id, :question_id, :body, :created_at, :updated_at, :user_id
+json.extract! @answer, :id, :question_id, :body, :created_at, :updated_at, :user_id, :rating
 json.url question_answer_url(@question, @answer)
 json.accept_url accept_question_answer_url(@question, @answer)
 

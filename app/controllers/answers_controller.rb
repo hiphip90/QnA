@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :get_answer, only: [:destroy, :update, :accept]
+
+  include Voting
   
   def create
     @question = Question.find(params[:question_id])

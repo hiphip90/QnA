@@ -5,6 +5,8 @@ class Question < ActiveRecord::Base
   has_many :attachments, as: :attachable, dependent: :destroy
   belongs_to :user
 
+  include Votes::Votable
+
   validates :title, :body, presence: true
   validates :title, length: { maximum: 150 }
 

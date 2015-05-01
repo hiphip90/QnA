@@ -1,5 +1,11 @@
 li id="answer_#{@answer.id}" class=('accepted' if @answer.accepted?)
-  div.answer-body
+  .answer-voting
+    p.upvote-link
+      a data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.url}/upvote" Upvote
+    h3.rating = @answer.rating
+    p.downvote-link
+      a data-remote="true" rel="nofollow" data-method="patch" href="#{@answer.url}/downvote" Downvote
+  .answer-body
     span
       = @answer.body
     ul
@@ -13,7 +19,7 @@ li id="answer_#{@answer.id}" class=('accepted' if @answer.accepted?)
       | Edit answer
     a.accept-answer href="#{@answer.accept_url}" rel='nofollow' data-remote="true" data-method="patch"
       | Accept answer
-  div.edit-answer-form.conceal
+  .edit-answer-form.conceal
     form.edit_answer id="answer_#{@answer.id}_edit_answer_#{@answer.id}" enctype="multipart/form-data" action="#{@answer.url}" accept-charset="UTF-8" data-remote="true" method="post"
       input name="utf8" type="hidden" value="✓"
       input type="hidden" name="_method" value="patch"

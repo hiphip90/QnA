@@ -40,4 +40,10 @@ $ ->
     errors = $.parseJSON(xhr.responseText);
     $('.answer-errors').remove();
     for error in errors 
-      $(e.target).before('<p class="answer-errors">' + error + '</p>') 
+      $(e.target).before('<p class="answer-errors">' + error + '</p>');
+
+  # process answer voting
+  $(document).on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->
+    response = $.parseJSON(xhr.responseText);
+    answer = $("#answer_#{response.id}");
+    answer.find('.rating').text(response.rating);

@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'shared_examples'
 
 RSpec.describe Answer, type: :model do
   it { should have_db_column(:body).of_type(:text) }
@@ -8,6 +9,8 @@ RSpec.describe Answer, type: :model do
   it { should have_many(:attachments).dependent(:destroy) }
 
   it { should accept_nested_attributes_for :attachments }
+
+  it_behaves_like 'votable'
 
   describe '#accept' do
     let(:question) { create(:question, :with_answers) }
