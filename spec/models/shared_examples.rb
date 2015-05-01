@@ -37,6 +37,13 @@ shared_examples_for 'voter' do
         expect { voter.upvote votable }.to_not change(votable.votes, :count)
       end
     end
+
+    context 'when user is the author' do
+      it 'does not create vote' do
+        votable.update(user: voter)
+        expect { voter.upvote votable }.to_not change(votable.votes, :count)
+      end
+    end
   end
 
   describe '#downvote' do
@@ -53,6 +60,13 @@ shared_examples_for 'voter' do
       it 'does not create vote' do
         voter.downvote votable
         expect { voter.downvote votable }.to_not change(votable.votes, :count)
+      end
+    end
+
+    context 'when user is the author' do
+      it 'does not create vote' do
+        votable.update(user: voter)
+        expect { voter.upvote votable }.to_not change(votable.votes, :count)
       end
     end
   end

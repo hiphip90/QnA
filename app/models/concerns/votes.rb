@@ -19,11 +19,11 @@ module Votes
     end
 
     def upvote(object)
-      self.votes.create(value: 1, votable: object) unless has_voted_for?(object)
+      self.votes.create(value: 1, votable: object) unless has_voted_for?(object) || self.id == object.user_id
     end
 
     def downvote(object)
-      self.votes.create(value: -1, votable: object) unless has_voted_for?(object)
+      self.votes.create(value: -1, votable: object) unless has_voted_for?(object) || self.id == object.user_id
     end
 
     def has_voted_for?(object)

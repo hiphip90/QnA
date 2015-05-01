@@ -49,6 +49,16 @@ feature 'Voting for answer', %q{
     end
   end
 
+  scenario 'User cannot vote for his own answer', js:true do
+    answer.update(user: user)
+    visit question_path(question)
+
+    within ('.answers') do
+      expect(page).to_not have_content('Upvote')
+      expect(page).to_not have_content('Downvote')
+    end
+  end
+
   scenario 'User recalls his vote', js:true do
     visit question_path(question)
 
