@@ -19,11 +19,16 @@ module Votes
     end
 
     def upvote(object)
-      self.votes.create(value: 1, votable: object)
+      self.votes.create(value: 1, votable: object) unless has_voted_for?(object)
     end
 
     def downvote(object)
-      self.votes.create(value: -1, votable: object)
+      self.votes.create(value: -1, votable: object) unless has_voted_for?(object)
+    end
+
+    def has_voted_for?(object)
+      return true if votes.where(votable: object).any?
+      false
     end
   end
 end

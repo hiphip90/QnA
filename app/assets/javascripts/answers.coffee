@@ -47,3 +47,4 @@ $ ->
     response = $.parseJSON(xhr.responseText);
     answer = $("#answer_#{response.id}");
     answer.find('.rating').text(response.rating);
+    answer.find('.upvote-link, .downvote-link').hide();

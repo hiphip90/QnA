@@ -30,6 +30,13 @@ shared_examples_for 'voter' do
       voter.upvote votable
       expect(votable.votes.last.value).to eq(1)
     end
+
+    context 'when voter already voted' do
+      it 'does not create vote' do
+        voter.upvote votable
+        expect { voter.upvote votable }.to_not change(votable.votes, :count)
+      end
+    end
   end
 
   describe '#downvote' do
@@ -40,6 +47,24 @@ shared_examples_for 'voter' do
     it 'assignes correct value to the vote' do
       voter.downvote votable
       expect(votable.votes.last.value).to eq(-1)
-    end 
+    end
+
+    context 'when voter already voted' do
+      it 'does not create vote' do
+        voter.downvote votable
+        expect { voter.downvote votable }.to_not change(votable.votes, :count)
+      end
+    end
+  end
+
+  describe '#has_voted_for?' do
+    it 'returns true if already voted' do
+      voter.upvote votable
+      expect(voter.has_voted_for?(votable)).to be_truthy
+    end
+
+    it 'returns false otherwise' do
+      expect(voter.has_voted_for?(votable)).to be_falsey
+    end
   end
 end
