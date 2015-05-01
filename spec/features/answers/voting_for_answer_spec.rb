@@ -79,4 +79,13 @@ feature 'Voting for answer', %q{
       expect(page).to have_content('Downvote')
     end
   end
+
+  scenario 'Unauthenticated user tries to vote' do
+    visit root_path
+    click_link 'Sign Out'
+    visit question_path(question)
+
+    expect(page).to_not have_content('Upvote')
+    expect(page).to_not have_content('Downvote')
+  end
 end

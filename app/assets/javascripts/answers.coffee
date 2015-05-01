@@ -43,14 +43,14 @@ $ ->
       $(e.target).before('<p class="answer-errors">' + error + '</p>');
 
   # process answer voting
-  $(document).on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->
+  $('.answers').on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->
     response = $.parseJSON(xhr.responseText);
     answer = $("#answer_#{response.id}");
     answer.find('.rating').text(response.rating);
     answer.find('.upvote-link, .downvote-link').hide();
     answer.find('.recall-vote').show();
 
-  $(document).on 'ajax:success', '.recall-vote', (e, data, status, xhr) ->
+  $('.answers').on 'ajax:success', '.recall-vote', (e, data, status, xhr) ->
     response = $.parseJSON(xhr.responseText);
     answer = $("#answer_#{response.id}");
     answer.find('.rating').text(response.rating);

@@ -7,17 +7,17 @@ module Voting
 
   def upvote
     current_user.upvote @votable
-    render :vote
+    render 'shared/vote'
   end
 
   def downvote
     current_user.downvote @votable
-    render :vote
+    render 'shared/vote'
   end
 
   def recall_vote
     current_user.recall_vote @votable
-    render :vote
+    render 'shared/vote'
   end
 
   private
