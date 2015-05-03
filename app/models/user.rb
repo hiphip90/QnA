@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: { case_sensitive: false }, 
                     length: { maximum: 150 }, format: { with: VALID_EMAIL_REGEX }
 
-  include Votes::Voter
+  has_many :votes
 
   private
     def downcase_email

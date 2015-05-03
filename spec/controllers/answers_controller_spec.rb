@@ -220,6 +220,16 @@ RSpec.describe AnswersController, type: :controller do
         expect{upvote}.to_not change(answer, :rating)
       end
     end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
+      end
+
+      it 'does not increase rating' do
+        expect{upvote}.to_not change(answer, :rating)
+      end
+    end
   end
 
   describe 'PATCH #downvote' do
@@ -244,13 +254,23 @@ RSpec.describe AnswersController, type: :controller do
         expect{downvote}.to_not change(answer, :rating)
       end
     end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
+      end
+
+      it 'does not increase rating' do
+        expect{downvote}.to_not change(answer, :rating)
+      end
+    end
   end
 
   describe 'PATCH #recall_vote' do
     let(:answer) { create(:answer, question_id: question.id) }
     let(:recall_vote) { patch :recall_vote, question_id: question.id, id: answer.id, format: :json }
 
-    before { user.upvote(answer) }
+    before { answer.upvote_by(user) }
 
     it 'deletes users vote' do
       expect{ recall_vote }.to change(user.votes, :count).by -1
@@ -263,6 +283,16 @@ RSpec.describe AnswersController, type: :controller do
     context 'when user is not logged in' do
       before do
         sign_out user
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
       end
 
       it 'does not delete vote' do

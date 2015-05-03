@@ -7,17 +7,17 @@ module Voting
   end
 
   def upvote
-    current_user.upvote @votable
+    @votable.upvote_by current_user unless @votable.user_id == current_user.id
     render 'shared/vote'
   end
 
   def downvote
-    current_user.downvote @votable
+    @votable.downvote_by current_user unless @votable.user_id == current_user.id
     render 'shared/vote'
   end
 
   def recall_vote
-    current_user.recall_vote @votable
+    @votable.recall_vote_by current_user unless @votable.user_id == current_user.id
     render 'shared/vote'
   end
 

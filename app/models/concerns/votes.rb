@@ -9,30 +9,22 @@ module Votes
     def rating
       votes.sum(:value)
     end
-  end
 
-  module Voter
-    extend ActiveSupport::Concern
-
-    included do
-      has_many :votes
+    def upvote_by(voter)
+      voter.votes.create(value: 1, votable: self) unless been_voted_by?(voter)
     end
 
-    def upvote(object)
-      self.votes.create(value: 1, votable: object) unless has_voted_for?(object) || self.id == object.user_id
+    def downvote_by(voter)
+      voter.votes.create(value: -1, votable: self) unless been_voted_by?(voter)
     end
 
-    def downvote(object)
-      self.votes.create(value: -1, votable: object) unless has_voted_for?(object) || self.id == object.user_id
-    end
-
-    def has_voted_for?(object)
-      return true if votes.where(votable: object).any?
+    def been_voted_by?(voter)
+      return true if voter.votes.where(votable: self).any?
       false
     end
 
-    def recall_vote(object)
-      votes = self.votes.where(votable: object)
+    def recall_vote_by(voter)
+      votes = voter.votes.where(votable: self)
       votes.destroy_all if votes.any?
     end
   end

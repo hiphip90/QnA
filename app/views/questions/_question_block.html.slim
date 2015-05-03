@@ -1,11 +1,11 @@
 .question-voting
   h3.rating = question.rating
   - if user_signed_in? && current_user.id != question.user_id
-    p.upvote-link class=('conceal' if current_user.has_voted_for?(question))
+    p.upvote-link class=('conceal' if question.been_voted_by?(current_user))
       = link_to 'Upvote', upvote_question_url(question), remote: true, method: :patch
-    p.downvote-link class=('conceal' if current_user.has_voted_for?(question))
+    p.downvote-link class=('conceal' if question.been_voted_by?(current_user))
       = link_to 'Downvote', downvote_question_url(question), remote: true, method: :patch
-    p.recall-vote class=('conceal' unless current_user.has_voted_for?(question))
+    p.recall-vote class=('conceal' unless question.been_voted_by?(current_user))
       = link_to 'Recall vote', recall_vote_question_url(question), remote: true, method: :patch
 .show-question-block
   h1.page-header == question.title

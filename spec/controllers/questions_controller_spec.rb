@@ -277,7 +277,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     before do
       sign_in user
-      user.upvote(question)
+      question.upvote_by(user)
     end
 
     it 'deletes users vote' do
@@ -291,6 +291,16 @@ RSpec.describe QuestionsController, type: :controller do
     context 'when user is not logged in' do
       before do
         sign_out user
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        question.update(user: user)
       end
 
       it 'does not delete vote' do

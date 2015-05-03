@@ -2,11 +2,11 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
   .answer-voting
     h3.rating = answer.rating
     - if user_signed_in? && current_user.id != answer.user_id
-      p.upvote-link class=('conceal' if current_user.has_voted_for?(answer))
+      p.upvote-link class=('conceal' if answer.been_voted_by?(current_user))
         = link_to 'Upvote', upvote_question_answer_url(@question, answer), remote: true, method: :patch
-      p.downvote-link class=('conceal' if current_user.has_voted_for?(answer))
+      p.downvote-link class=('conceal' if answer.been_voted_by?(current_user))
         = link_to 'Downvote', downvote_question_answer_url(@question, answer), remote: true, method: :patch
-      p.recall-vote class=('conceal' unless current_user.has_voted_for?(answer))
+      p.recall-vote class=('conceal' unless answer.been_voted_by?(current_user))
         = link_to 'Recall vote', recall_vote_question_answer_url(@question, answer), remote: true, method: :patch
   .answer-body
     span
