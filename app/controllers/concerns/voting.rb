@@ -3,6 +3,7 @@ module Voting
 
   included do
     before_action :get_votable, only: [:upvote, :downvote, :recall_vote]
+    before_action :authenticate_user!, except: [:index, :show]
   end
 
   def upvote
