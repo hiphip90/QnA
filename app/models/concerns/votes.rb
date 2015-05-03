@@ -7,7 +7,7 @@ module Votes
     end
 
     def rating
-      votes.pluck(:value).sum
+      votes.sum(:value)
     end
   end
 
