@@ -5,12 +5,11 @@ class Question < ActiveRecord::Base
   has_many :attachments, as: :attachable, dependent: :destroy
   belongs_to :user
 
-  include Votes::Votable
+  include Votable
 
   validates :title, :body, presence: true
   validates :title, length: { maximum: 150 }
 
   accepts_nested_attributes_for :attachments, reject_if: proc { |attributes| attributes[:file].blank? }, 
                                                                                       allow_destroy: true
-
 end
