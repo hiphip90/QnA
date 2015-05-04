@@ -16,3 +16,17 @@ $ ->
     $("#question_title").val($('.page-header').text());
     $("#question_body").val($('.question-body').text())
 
+  # process question voting
+  $('.question-voting').on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->
+    response = $.parseJSON(xhr.responseText);
+    question = $(".question");
+    question.find('.rating').text(response.rating);
+    question.find('.upvote-link, .downvote-link').hide();
+    question.find('.recall-vote').show();
+
+  $('.question-voting').on 'ajax:success', '.recall-vote', (e, data, status, xhr) ->
+    response = $.parseJSON(xhr.responseText);
+    question = $(".question");
+    question.find('.rating').text(response.rating);
+    question.find('.upvote-link, .downvote-link').show();
+    question.find('.recall-vote').hide();

@@ -7,90 +7,47 @@ RSpec.describe AnswersController, type: :controller do
   before { sign_in(user) }
 
   describe 'POST #create' do
-    context "when client's js is enabled" do
-      let(:post_valid) { post :create, question_id: question.id, 
-                                answer: attributes_for(:answer), format: :js }
-      let(:post_invalid) { post :create, question_id: question.id, 
-                                answer: attributes_for(:answer, body: nil), format: :js }
+    let(:post_valid) { post :create, question_id: question.id, 
+                              answer: attributes_for(:answer), format: :json }
+    let(:post_invalid) { post :create, question_id: question.id, 
+                              answer: attributes_for(:answer, body: nil), format: :json }
 
-      context 'with valid info' do
-        it 'saves answer in db and associates it with a proper question' do
-          expect{ post_valid }.to change(question.answers, :count).by(1)
-        end
-
-        it 'associates it with a current user' do
-          expect{ post_valid }.to change(user.answers, :count).by(1)
-        end
-
-        it 'renders create template' do
-          post_valid
-          expect(response).to render_template(:create)
-        end
+    context 'with valid info' do
+      it 'saves answer in db and associates it with a proper question' do
+        expect{ post_valid }.to change(question.answers, :count).by(1)
       end
 
-      context 'with invalid info' do
-        it 'does not create answer in database' do
-          expect{ post_invalid }.to_not change(Answer, :count)
-        end
-      end
-
-      context 'when user is not logged in' do
-        before { sign_out user }
-
-        it 'does not save answer in db' do
-          expect{ post_valid }.to_not change(Answer, :count)
-        end
-
-        it 'responds with 401' do
-          post_valid
-          expect(response.status).to eq 401
-        end
+      it 'associates it with a current user' do
+        expect{ post_valid }.to change(user.answers, :count).by(1)
       end
     end
 
-    context "when js is not enabled" do
-      let(:post_valid) { post :create, question_id: question.id, 
-                                answer: attributes_for(:answer) }
-      let(:post_invalid) { post :create, question_id: question.id, 
-                                answer: attributes_for(:answer, body: nil) }
-
-      context 'with valid info' do
-        it 'saves answer in db and associates it with a proper question' do
-          expect{ post_valid }.to change(question.answers, :count).by(1)
-        end
-
-        it 'associates it with a current user' do
-          expect{ post_valid }.to change(user.answers, :count).by(1)
-        end
-
-        it 'renders create template' do
-          post_valid
-          expect(response).to redirect_to question_path(question)
-        end
+    context 'with invalid info' do
+      it 'does not create answer in database' do
+        expect{ post_invalid }.to_not change(Answer, :count)
       end
 
-      context 'with invalid info' do
-        it 'does not create answer in database' do
-          expect{ post_invalid }.to_not change(Answer, :count)
-        end
-
-        it 're-renders question show' do
-          post_invalid
-          expect(response).to render_template(:show)
-        end
+      it 'responds with 422' do
+        post_invalid
+        expect(response.status).to eq 422
       end
 
-      context 'when user is not logged in' do
-        before { sign_out user }
+      it 'responds with json of errors' do
+        post_invalid
+        expect(response.body).to eq assigns(:answer).errors.full_messages.to_json
+      end
+    end
 
-        it 'does not save answer in db' do
-          expect{ post_valid }.to_not change(Answer, :count)
-        end
+    context 'when user is not logged in' do
+      before { sign_out user }
 
-        it 'responds with 401' do
-          post_valid
-          expect(response).to redirect_to new_user_session_path
-        end
+      it 'does not save answer in db' do
+        expect{ post_valid }.to_not change(Answer, :count)
+      end
+
+      it 'responds with 401' do
+        post_valid
+        expect(response.status).to eq 401
       end
     end
   end
@@ -140,7 +97,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
     let(:patch_request) { patch :update, question_id: question.id, id: answer.id,
-                                  answer: { body: 'Edited answer' }, format: :js }
+                                  answer: { body: 'Edited answer' }, format: :json }
 
     context 'when logged in user is the author' do
       before do 
@@ -154,10 +111,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'changes answers body' do
         answer.reload
         expect(answer.body).to eq 'Edited answer'
-      end
-
-      it 'renders update' do
-        expect(response).to render_template :update
       end
     end
 
@@ -234,13 +187,116 @@ RSpec.describe AnswersController, type: :controller do
         patch :accept, question_id: question.id, id: answer.id, format: :js
       end
 
-      it 'does not chande accepted status' do
+      it 'does not change accepted status' do
         answer.reload
         expect(answer.accepted?).to be_falsey
       end
 
       it 'it responds with 400' do
         expect(response.status).to eq 400
+      end
+    end
+  end
+
+  describe 'PATCH #upvote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:upvote) { patch :upvote, question_id: question.id, id: answer.id, format: :json }
+
+    it 'increases the answers rating' do
+      expect{upvote}.to change(answer, :rating).by 1
+    end
+
+    it 'renders vote template' do
+      upvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{upvote}.to_not change(answer, :rating)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
+      end
+
+      it 'does not increase rating' do
+        expect{upvote}.to_not change(answer, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #downvote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:downvote) { patch :downvote, question_id: question.id, id: answer.id, format: :json }
+
+    it 'decreases the answers rating' do
+      expect{downvote}.to change(answer, :rating).by -1
+    end
+
+    it 'renders vote template' do
+      downvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{downvote}.to_not change(answer, :rating)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
+      end
+
+      it 'does not increase rating' do
+        expect{downvote}.to_not change(answer, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #recall_vote' do
+    let(:answer) { create(:answer, question_id: question.id) }
+    let(:recall_vote) { patch :recall_vote, question_id: question.id, id: answer.id, format: :json }
+
+    before { answer.upvote_by(user) }
+
+    it 'deletes users vote' do
+      expect{ recall_vote }.to change(user.votes, :count).by -1
+    end
+
+    it 'deletes correct vote' do
+      expect{ recall_vote }.to change(answer.votes, :count).by -1
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        answer.update(user: user)
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
       end
     end
   end

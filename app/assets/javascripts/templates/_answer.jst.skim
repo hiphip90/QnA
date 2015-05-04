@@ -1,0 +1,42 @@
+li id="answer_#{@answer.id}" class=('accepted' if @answer.accepted?)
+  .answer-voting
+    h3.rating = @answer.rating
+  .answer-body
+    span
+      = @answer.body
+    ul
+      - for a in @answer.attachments
+        li 
+          a href=a.file_url
+            = a.file_name
+    a href="#{@answer.url}" rel='nofollow' data-remote="true" data-method="delete"
+      | Delete answer
+    a.edit-answer href="#"
+      | Edit answer
+    a.accept-answer href="#{@answer.accept_url}" rel='nofollow' data-remote="true" data-method="patch"
+      | Accept answer
+  .edit-answer-form.conceal
+    form.edit_answer id="answer_#{@answer.id}_edit_answer_#{@answer.id}" enctype="multipart/form-data" action="#{@answer.url}" accept-charset="UTF-8" data-remote="true" method="post"
+      input name="utf8" type="hidden" value="✓"
+      input type="hidden" name="_method" value="patch"
+      label for="answer_#{@answer.id}_answer_body" Edit answer
+      textarea name="answer[body]" id="answer_#{@answer.id}_answer_body" =@answer.body
+      .form-group
+        input.submit type="submit" name="commit" value="Save"
+        button.discard name="button" Discard
+      .form-group#attachments
+        - for a, index in @answer.attachments
+          .nested-fields
+            .field
+              label for="answer_#{@answer.id}_answer_attachments_attributes_#{index}_file" File
+              input type="file" name="answer[attachments_attributes][#{index}][file]" id="answer_#{@answer.id}_answer_attachments_attributes_#{index}_file"
+            input type="hidden" name="answer[attachments_attributes][#{index}][_destroy]" id="answer_attachments_attributes_#{index}__destroy" value="false"
+            a class="remove_fields existing" href="#" Remove this attachment
+          input type="hidden" value="#{a.id}" name="answer[attachments_attributes][#{index}][id]" id="answer_#{@answer.id}_answer_attachments_attributes_#{index}_id"
+        .links
+          a.add_fields data-association="attachment" data-associations="attachments" data-association-insertion-template="<div class='nested-fields'>
+                      <div class='field'>
+                        <label for='answer_#{@answer.id}_answer_attachments_attributes_new_attachments_file'>File</label><input type='file' name='answer[attachments_attributes][new_attachments][file]' id='answer_#{@answer}_answer_attachments_attributes_new_attachments_file' />
+                      </div>
+                      <input type='hidden' name='answer[attachments_attributes][new_attachments][_destroy]' id='answer_attachments_attributes_new_attachments__destroy' value='false' /><a class='remove_fields dynamic' href='#'>Remove this attachment</a>
+                    </div>" href="#" Moar files!

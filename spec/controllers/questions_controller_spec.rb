@@ -215,4 +215,97 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #upvote' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let(:upvote) { patch :upvote, id: question.id, format: :json }
+
+    before { sign_in user }
+
+    it 'increases the questions rating' do
+      expect{upvote}.to change(question, :rating).by 1
+    end
+
+    it 'renders vote template' do
+      upvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{upvote}.to_not change(question, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #downvote' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let(:downvote) { patch :downvote, id: question.id, format: :json }
+
+    before { sign_in user }
+
+    it 'decreases the questions rating' do
+      expect{downvote}.to change(question, :rating).by -1
+    end
+
+    it 'renders vote template' do
+      downvote
+      expect(response).to render_template :vote
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not increase rating' do
+        expect{downvote}.to_not change(question, :rating)
+      end
+    end
+  end
+
+  describe 'PATCH #recall_vote' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let(:recall_vote) { patch :recall_vote, id: question.id, format: :json }
+
+    before do
+      sign_in user
+      question.upvote_by(user)
+    end
+
+    it 'deletes users vote' do
+      expect{ recall_vote }.to change(user.votes, :count).by -1
+    end
+
+    it 'deletes correct vote' do
+      expect{ recall_vote }.to change(question.votes, :count).by -1
+    end
+
+    context 'when user is not logged in' do
+      before do
+        sign_out user
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'when user is author' do
+      before do
+        question.update(user: user)
+      end
+
+      it 'does not delete vote' do
+        expect{ recall_vote }.to_not change(Vote, :count)
+      end
+    end
+  end
 end

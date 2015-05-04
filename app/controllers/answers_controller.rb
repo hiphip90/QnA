@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :get_answer, only: [:destroy, :update, :accept]
+
+  include Voting
   
   def create
     @question = Question.find(params[:question_id])
@@ -9,11 +11,10 @@ class AnswersController < ApplicationController
 
     respond_to do |format|
       if @answer.save
-        format.html { redirect_to @question }
+        format.json { render 'answer' }
       else
-        format.html { render 'questions/show' }
+        format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
       end
-      format.js {}
     end
   end
 
@@ -28,10 +29,17 @@ class AnswersController < ApplicationController
 
   def update
     @question = @answer.question
-    if current_user.id == @answer.user_id
-      @answer.update(answer_params)
-    else
-      render nothing: true, status: :bad_request
+
+    respond_to do |format|
+      if current_user.id == @answer.user_id
+        if @answer.update(answer_params)
+          format.json { render 'answer' }
+        else
+          format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
+        end
+      else
+        format.json { render nothing: true, status: :bad_request }
+      end
     end
   end
 

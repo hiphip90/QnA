@@ -1,5 +1,14 @@
 li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
-  div.answer-body
+  .answer-voting
+    h3.rating = answer.rating
+    - if user_signed_in? && current_user.id != answer.user_id
+      p.upvote-link class=('conceal' if answer.been_voted_by?(current_user))
+        = link_to 'Upvote', upvote_question_answer_url(@question, answer), remote: true, method: :patch
+      p.downvote-link class=('conceal' if answer.been_voted_by?(current_user))
+        = link_to 'Downvote', downvote_question_answer_url(@question, answer), remote: true, method: :patch
+      p.recall-vote class=('conceal' unless answer.been_voted_by?(current_user))
+        = link_to 'Recall vote', recall_vote_question_answer_url(@question, answer), remote: true, method: :patch
+  .answer-body
     span
       = answer.body
     ul
@@ -12,7 +21,7 @@ li id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
     - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
       = link_to 'Accept answer', accept_question_answer_url(@question, answer),
                                                         remote: true, method: :patch, class: 'accept-answer'
-  div.edit-answer-form.conceal
+  .edit-answer-form.conceal
     = form_for [@question, answer], remote: true, namespace: "#{dom_id(answer)}" do |f|
       = f.label :body, 'Edit answer'
       = f.text_area :body

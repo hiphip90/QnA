@@ -3,6 +3,8 @@ class Answer < ActiveRecord::Base
   belongs_to :user
   has_many :attachments, as: :attachable, dependent: :destroy
 
+  include Votable
+
   validates :body, presence: true
   default_scope { order('accepted DESC, created_at DESC') }
 

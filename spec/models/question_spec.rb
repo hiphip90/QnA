@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'shared_examples'
 
 RSpec.describe Question, type: :model do
   it { should have_db_column(:title).of_type(:string) }
@@ -12,4 +13,6 @@ RSpec.describe Question, type: :model do
   it { should belong_to(:user) }
 
   it { should accept_nested_attributes_for(:attachments) }
+
+  it_behaves_like 'votable'
 end
