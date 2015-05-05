@@ -11,9 +11,12 @@ class AnswersController < ApplicationController
 
     respond_to do |format|
       if @answer.save
-        format.json { render 'answer' }
+        format.js do
+          Danthes.publish_to "/questions/#{@question.id}/answers", answer: render_to_string('answer.json.jbuilder')
+          render nothing: true
+        end
       else
-        format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
+        format.js
       end
     end
   end

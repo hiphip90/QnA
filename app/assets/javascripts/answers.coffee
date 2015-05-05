@@ -1,6 +1,6 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+# # Place all the behaviors and hooks related to the matching controller here.
+# # All this logic will automatically be available in application.js.
+# # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
   # show edit form 
@@ -19,28 +19,28 @@ $ ->
     answer.find("textarea").val(answer.find('span').text())
 
   # process new answer creation
-  $('#new_answer').bind 'ajax:success', (e, data, status, xhr) ->
-    answer = $.parseJSON(xhr.responseText);
+  questionId = $('.question').data('questionId');
+  Danthes.subscribe "/questions/#{questionId}/answers", (data, channel) -> 
+    answer = $.parseJSON(data.answer);
+    $('.answer-errors').remove();
     $('.answers').show();
     $('.answers-block').append(JST["templates/_answer"]({ answer: answer }));
     $('.answer-errors').remove();
     $('#new_answer textarea').val('');
     $('#new_answer .nested-fields').not(':first-child').remove();
-  .bind 'ajax:error', (e, xhr, status, error) ->
-    errors = $.parseJSON(xhr.responseText);
-    $('.answer-errors').remove();
-    for error in errors 
-      $('#new_answer').before('<p class="answer-errors">' + error + '</p>')
-
+    count = $('.answers-block li').length;
+    $('.answers-count').text("#{count} answers");
+    
   # process answer editing
-  $(document).on 'ajax:success', '.edit_answer', (e, data, status, xhr) ->
+  $('.answers').bind 'ajax:success', '.edit_answer', (e, data, status, xhr) ->
     answer = $.parseJSON(xhr.responseText);
     $("#answer_#{answer.id}").replaceWith(JST["templates/_answer"]({ answer: answer }));
-  .bind 'ajax:error', (e, xhr, status, error) ->
+  $('.answers').bind 'ajax:error', (e, xhr, status, error) ->
     errors = $.parseJSON(xhr.responseText);
     $('.answer-errors').remove();
-    for error in errors 
-      $(e.target).before('<p class="answer-errors">' + error + '</p>');
+    for error in errors
+      do (error) ->
+        $(e.target).before('<p class="answer-errors">' + error + '</p>');
 
   # process answer voting
   $('.answers').on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->
