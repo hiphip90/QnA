@@ -4,6 +4,7 @@ class Answer < ActiveRecord::Base
   has_many :attachments, as: :attachable, dependent: :destroy
 
   include Votable
+  include Commentable
 
   validates :body, presence: true
   default_scope { order('accepted DESC, created_at DESC') }
