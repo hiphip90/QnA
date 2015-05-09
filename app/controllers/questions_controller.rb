@@ -22,6 +22,7 @@ class QuestionsController < ApplicationController
     @question = current_user.questions.build(question_params)
     if @question.save
       flash[:success] = "You've successfully created a question!"
+      Danthes.publish_to "/questions", question: render_to_string('question.json.jbuilder')
       redirect_to @question
     else
       render 'new'
