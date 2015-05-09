@@ -21,16 +21,18 @@ li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
     - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
       = link_to 'Accept answer', accept_answer_url(answer),
                                           remote: true, method: :patch, class: 'accept-answer'
+
   .answer-comments
     == render 'comments/comment_list', object: answer 
-    = link_to "Add comment", '#', class: "new-answer-comment-link"
-    .answer-comment-form.conceal
-      = form_for [answer, Comment.new], remote: true do |f|
-        div.form-group
-          = f.label :body, "Comment"
-          = f.text_area :body, class: 'form-control'
-        div.form-group
-          = f.submit 'Post', class: 'btn btn-primary'
+    - if user_signed_in?
+      = link_to "Add comment", '#', class: "new-answer-comment-link"
+      .answer-comment-form.conceal
+        = form_for [answer, Comment.new], remote: true do |f|
+          div.form-group
+            = f.label :body, "Comment"
+            = f.text_area :body, class: 'form-control'
+          div.form-group
+            = f.submit 'Post', class: 'btn btn-primary'
   .edit-answer-form.conceal
     = form_for answer, remote: true, namespace: "#{dom_id(answer)}" do |f|
       = f.label :body, 'Edit answer'

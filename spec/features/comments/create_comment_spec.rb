@@ -51,4 +51,12 @@ feature 'Create comment', %q{
       expect(page).to_not have_content "Commentin'"
     end
   end
+
+  scenario 'user is not logged in' do
+    visit root_path
+    click_on 'Sign Out'
+    
+    visit question_path(question)
+    expect(page).to_not have_link "Add comment"
+  end
 end
