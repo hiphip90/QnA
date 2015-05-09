@@ -47,7 +47,7 @@ class AnswersController < ApplicationController
   end
 
   def accept
-    @question = Question.find(params[:question_id])
+    @question = @answer.question
     if current_user.id == @question.user_id
       @answer.accept
     else

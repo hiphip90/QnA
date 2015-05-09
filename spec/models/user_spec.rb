@@ -1,5 +1,4 @@
 require 'rails_helper'
-require_relative 'shared_examples'
 
 RSpec.describe User, type: :model do
   it { should have_db_column(:name).of_type(:string) }
