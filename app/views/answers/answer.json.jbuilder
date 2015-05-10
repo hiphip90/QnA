@@ -1,4 +1,5 @@
 json.extract! @answer, :id, :question_id, :body, :created_at, :updated_at, :user_id, :rating
+json.count @answer.question.answers.count
 json.url answer_url(@answer)
 json.accept_url accept_answer_url(@answer)
 

@@ -28,8 +28,7 @@ $ ->
     $('.answer-errors').remove();
     $('#new_answer textarea').val('');
     $('#new_answer .nested-fields').not(':first-child').remove();
-    count = $('.answers-block li').length;
-    $('.answers-count').text("#{count} answers");
+    $('.answers-count').text("#{answer.count} answers");
     
   # process answer editing
   $('.answers').bind 'ajax:success', '.edit_answer', (e, data, status, xhr) ->
