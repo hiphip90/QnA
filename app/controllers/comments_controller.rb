@@ -19,11 +19,7 @@ class CommentsController < ApplicationController
 
   private
     def get_commentable
-      params.each do |name, value|
-        if name =~ /(.+)_id$/
-          @commentable = $1.classify.constantize.find(value)
-        end
-      end
+      @commentable = params[:commentable].classify.constantize.find(params["#{params[:commentable]}_id".to_sym])
     end
 
     def comment_params

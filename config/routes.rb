@@ -10,12 +10,10 @@ Rails.application.routes.draw do
     end
   end
 
-  concern :commentable do
-    resource :comments
-  end
-
-  resources :questions, concerns: [:votable, :commentable] do
-    resources :answers, shallow: true, only: [:create, :destroy, :update], concerns: [:votable, :commentable] do
+  resources :questions, concerns: :votable do
+    resources :comments, defaults: { commentable: 'question' }
+    resources :answers, shallow: true, only: [:create, :destroy, :update], concerns: :votable do
+      resources :comments, defaults: { commentable: 'answer' }
       patch :accept, on: :member
     end
   end
