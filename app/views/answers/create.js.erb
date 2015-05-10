@@ -1,0 +1,4 @@
+<% @answer.errors.full_messages.each do |msg| %>
+  $('.answer-errors').remove();
+  $('.new_answer textarea').before('<p class="answer-errors"><%= j msg %></p>');
+<% end %>

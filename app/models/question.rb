@@ -6,6 +6,7 @@ class Question < ActiveRecord::Base
   belongs_to :user
 
   include Votable
+  include Commentable
 
   validates :title, :body, presence: true
   validates :title, length: { maximum: 150 }

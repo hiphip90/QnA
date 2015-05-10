@@ -30,3 +30,8 @@ $ ->
     question.find('.rating').text(response.rating);
     question.find('.upvote-link, .downvote-link').show();
     question.find('.recall-vote').hide();
+
+  # process new question creation
+  Danthes.subscribe "/questions", (data, channel) ->
+    question = $.parseJSON(data.question);
+    $('.questions-list').prepend(JST["templates/_question"]({ question: question }))

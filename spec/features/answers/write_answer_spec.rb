@@ -17,6 +17,18 @@ feature 'Writing answer', %q{
     expect(page).to have_content "Do a barrell roll"
   end
 
+  scenario 'New answer is visible to other users without reload', js: true do
+    other_user_session = Capybara::Session.new(:webkit, QnA::Application)
+    other_user_session.visit question_path(user.questions.last)
+    
+    sign_in_as(user)
+    visit question_path(user.questions.last)
+    fill_in 'Body', with: "Do a barrell roll"
+    click_on 'Post answer'
+
+    expect(other_user_session).to have_content "Do a barrell roll"
+  end
+
   scenario 'Authenticated user writes invalid answer', js: true do
     sign_in_as(user)
     visit question_path(user.questions.last)

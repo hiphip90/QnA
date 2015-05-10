@@ -8,9 +8,9 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'POST #create' do
     let(:post_valid) { post :create, question_id: question.id, 
-                              answer: attributes_for(:answer), format: :json }
+                              answer: attributes_for(:answer), format: :js }
     let(:post_invalid) { post :create, question_id: question.id, 
-                              answer: attributes_for(:answer, body: nil), format: :json }
+                              answer: attributes_for(:answer, body: nil), format: :js }
 
     context 'with valid info' do
       it 'saves answer in db and associates it with a proper question' do
@@ -27,14 +27,9 @@ RSpec.describe AnswersController, type: :controller do
         expect{ post_invalid }.to_not change(Answer, :count)
       end
 
-      it 'responds with 422' do
+      it 'renders create' do
         post_invalid
-        expect(response.status).to eq 422
-      end
-
-      it 'responds with json of errors' do
-        post_invalid
-        expect(response.body).to eq assigns(:answer).errors.full_messages.to_json
+        expect(response).to render_template :create
       end
     end
 

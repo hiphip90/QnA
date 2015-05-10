@@ -1,12 +1,23 @@
-.question
+.question data={ question_id: "#{@question.id}" }
   == render 'question_block', question: @question
+  .question-comments
+    == render 'comments/comment_list', object: @question
+    - if user_signed_in?
+      = link_to "Add comment", '#', class: "new-question-comment-link"
+      .question-comment-form.conceal
+        = form_for [@question, Comment.new], remote: true do |f|
+          div.form-group
+            = f.label :body, "Comment"
+            = f.text_area :body, class: 'form-control'
+          div.form-group
+            = f.submit 'Post', class: 'btn btn-primary'
 == render 'answers/answer_list'
 - if user_signed_in?
   hr.question-divider
   h4 Your answer
   div.row
     div.col-md-4
-      = form_for [@question, @answer], remote: true, data: { type: :json } do |f|
+      = form_for [@question, @answer], remote: true do |f|
         = render 'shared/error_messages', object: f.object
         div.form-group
           = f.label :body
@@ -18,3 +29,5 @@
             = link_to_add_association "Moar files!", f, :attachments
         div.form-group
           = f.submit 'Post answer', class: 'btn btn-primary'
+== subscribe_to "/questions/#{@question.id}/answers"
+== subscribe_to "/questions/#{@question.id}/comments"

@@ -1,0 +1,17 @@
+.question id="question_#{@question.id}"
+  .question-block
+    h3
+      a href="@question.link"
+        = @question.title
+    span
+      - if @question.body.length < 170 
+        = @question.body 
+      - else 
+        = @question.body.substring(0, 170) + ' ...'
+  .user-info-block
+    span.created-at
+      | asked just now
+    br
+    span.created-by
+      | by 
+      = @question.user.name

@@ -1,0 +1,3 @@
+li id="comment_#{@comment.id}"
+  p.body
+    = @comment.body

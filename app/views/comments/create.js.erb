@@ -1,0 +1,4 @@
+<% @comment.errors.full_messages.each do |msg| %>
+  $('.comment-errors').remove();
+  $('.new_comment textarea').before('<p class="comment-errors"><%= j msg %></p>');
+<% end %>
