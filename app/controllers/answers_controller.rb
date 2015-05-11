@@ -1,58 +1,30 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :get_answer, only: [:destroy, :update, :accept]
+  before_action :get_answer_with_question, only: [:destroy, :update, :accept]
+  after_action :publish_answer, only: :create
 
+  respond_to :js
+  
   include Voting
   
   def create
     @question = Question.find(params[:question_id])
-    @answer = @question.answers.build(answer_params)
-    @answer.user = current_user
-
-    respond_to do |format|
-      if @answer.save
-        format.js do
-          Danthes.publish_to "/questions/#{@question.id}/answers", answer: render_to_string('answer.json.jbuilder')
-          render nothing: true
-        end
-      else
-        format.js
-      end
-    end
+    respond_with @answer = @question.answers.create(answer_params.merge(user: current_user))
   end
 
   def destroy
-    @question = @answer.question
-    if current_user.id == @answer.user_id
-      @answer.destroy
-    else
-      render nothing: true, status: :bad_request
-    end
+    @answer.destroy if current_user.id == @answer.user_id
+    respond_with @answer
   end
 
   def update
-    @question = @answer.question
-
-    respond_to do |format|
-      if current_user.id == @answer.user_id
-        if @answer.update(answer_params)
-          format.json { render 'answer' }
-        else
-          format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
-        end
-      else
-        format.json { render nothing: true, status: :bad_request }
-      end
-    end
+    @answer.update(answer_params) if current_user.id == @answer.user_id
+    respond_with @answer
   end
 
   def accept
-    @question = @answer.question
-    if current_user.id == @question.user_id
-      @answer.accept
-    else
-      render nothing: true, status: :bad_request
-    end
+    @answer.accept if current_user.id == @question.user_id
+    respond_with @answer
   end
 
   private
@@ -60,7 +32,12 @@ class AnswersController < ApplicationController
       params.require(:answer).permit(:body, attachments_attributes: [:id, :file, :_destroy])
     end
 
-    def get_answer
+    def get_answer_with_question
       @answer = Answer.find(params[:id])
+      @question = @answer.question
+    end
+
+    def publish_answer
+      Danthes.publish_to "/questions/#{@question.id}/answers", answer: render_to_string('answers/show.json.jbuilder') if @answer.valid?
     end
 end
