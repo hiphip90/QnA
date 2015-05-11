@@ -17,7 +17,7 @@ feature 'Creating question', %q{
     fill_in 'Body', with: 'Of life, universe and everything'
     click_on 'Create question'
 
-    expect(page).to have_content "You've successfully created a question!"
+    expect(page).to have_content "You've successfully created a Question"
     expect(current_path).to eq(question_path(Question.last))
   end
 

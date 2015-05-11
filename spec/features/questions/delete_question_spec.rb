@@ -16,7 +16,7 @@ feature 'Question delete process', %q{
     click_on 'Delete question'
 
     expect(current_path).to eq questions_path
-    expect(page).to have_content "You've successfully deleted a question!"
+    expect(page).to have_content "You've successfully deleted a Question"
   end
 
   scenario 'User tries to delete question from another user' do

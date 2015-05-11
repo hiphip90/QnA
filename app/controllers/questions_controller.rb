@@ -21,9 +21,7 @@ class QuestionsController < ApplicationController
   end
   
   def create
-    @question = current_user.questions.build(question_params)
-    flash[:success] = "You've successfully created a question!" if @question.save
-    respond_with(@question)
+    respond_with(@question = current_user.questions.create(question_params))
   end
 
   def update
@@ -32,10 +30,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if @question.user_id == current_user.id
-      flash[:success] = "You've successfully deleted a question!"
-      @question.destroy
-    end
+    @question.destroy if @question.user_id == current_user.id
     respond_with(@question)
   end
 

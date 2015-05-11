@@ -63,7 +63,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'sets flash message' do
         post_with_valid_params
-        expect(flash[:success]).to_not be_nil
+        expect(flash[:notice]).to_not be_nil
       end
     end
     
@@ -118,7 +118,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'shows sets flash message' do
         destroy_correct_question
-        expect(flash[:success]).to_not be_nil
+        expect(flash[:notice]).to_not be_nil
       end
     end
 
