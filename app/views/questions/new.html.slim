@@ -11,7 +11,7 @@ h1 New question
         = f.text_area :body, class: 'form-control'
       p Attachments:
       .form-group
-        = f.fields_for :attachments do |field|
+        = f.fields_for :attachments, @question.attachments.build do |field|
           = render 'attachment_fields', f: field
         p.links
           = link_to_add_association "Moar files!", f, :attachments

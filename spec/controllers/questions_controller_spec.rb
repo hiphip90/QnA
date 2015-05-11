@@ -2,19 +2,6 @@ require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
 
-  describe 'GET #index' do
-    before { get :index }
-
-    it 'populates questions array' do
-      questions = create_list(:question, 2)
-      expect(assigns(:questions)).to match_array(questions)
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template(:index)
-    end
-  end
-
   describe 'GET #new' do
     let(:user) { create(:user) }
     before do 
@@ -24,10 +11,6 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns new question variable' do
       expect(assigns(:question)).to_not be_nil
-    end
-
-    it 'assigns new attachment' do
-      expect(assigns(:question).attachments.first).to be_a_new(Attachment)
     end
 
     it 'renders new view' do
@@ -57,10 +40,6 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns blank new answer to a variable' do
       expect(assigns(:answer)).to_not be_nil
-    end
-
-    it 'assigns new attachment for answer' do
-      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
     end
   end
 
@@ -132,9 +111,9 @@ RSpec.describe QuestionsController, type: :controller do
         expect{ destroy_correct_question }.to change(Question, :count).by(-1)
       end
 
-      it 'redirects to root on successful destroy' do
+      it 'redirects to index on successful destroy' do
         destroy_correct_question
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to questions_path
       end
 
       it 'shows sets flash message' do
@@ -148,11 +127,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'does not delete question' do
         expect{ destroy_incorrect_question }.to_not change(Question, :count)
-      end
-
-      it 'redirects to root' do
-        destroy_incorrect_question
-        expect(response).to redirect_to root_path
       end
     end
 
@@ -208,10 +182,6 @@ RSpec.describe QuestionsController, type: :controller do
 
         expect(question.title).to_not eq "Edited title"
         expect(question.body).to_not eq "Edited body"
-      end
-
-      it 'responds with 400' do
-        expect(response.status).to eq 400
       end
     end
   end

@@ -324,6 +324,7 @@ DEPENDENCIES
   pry
   rails (= 4.2.0)
   remotipart
+  responders
   rspec-rails
   sass
   sass-rails (~> 5.0)

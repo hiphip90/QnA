@@ -1,5 +1,11 @@
-<% if remotipart_submitted? %>
-  $('.question').html('<%= j "#{render "question_block", question: @question}" %>');
-<% else %>   
-  $('.question').html('<%= j render "question_block", question: @question %>');
+<% if @question.valid? %>
+  <% if remotipart_submitted? %>
+    $('.question').html('<%= j "#{render "question_block", question: @question}" %>');
+  <% else %>   
+    $('.question').html('<%= j render "question_block", question: @question %>');
+  <% end %>
+<% else %>
+  <% @question.errors.full_messages.each do |message| %>
+    $('.edit-question-form').before('<p class="error-messages"><%= j message %></p>')
+  <% end %>
 <% end %>

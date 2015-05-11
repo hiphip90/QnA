@@ -15,7 +15,7 @@ feature 'Question delete process', %q{
     visit question_path(question)
     click_on 'Delete question'
 
-    expect(current_path).to eq root_path
+    expect(current_path).to eq questions_path
     expect(page).to have_content "You've successfully deleted a question!"
   end
 

@@ -23,7 +23,7 @@
           = f.label :body
           = f.text_area :body, class: 'form-control'
         div.form-group
-          = f.fields_for :attachments do |field|
+          = f.fields_for :attachments, @answer.attachments.build do |field|
             = render 'attachment_fields', f: field
           .links
             = link_to_add_association "Moar files!", f, :attachments
