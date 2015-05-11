@@ -1,20 +1,12 @@
 class CommentsController < ApplicationController
   before_action :get_commentable
   before_action :authenticate_user!
+  after_action :publish_comment
+
+  respond_to :js
 
   def create
-    @comment = @commentable.comments.build(comment_params)
-
-    respond_to do |format|
-      if @comment.save
-        format.js do
-          Danthes.publish_to "/questions/#{@commentable.try(:question).try(:id) || @commentable.id}/comments", comment: render_to_string('comment.json.jbuilder')
-          render nothing: true
-        end
-      else
-        format.js
-      end
-    end
+    respond_with(@comment = @commentable.comments.create(comment_params))
   end
 
   private
@@ -24,5 +16,9 @@ class CommentsController < ApplicationController
 
     def comment_params
       params.require(:comment).permit(:body)
+    end
+
+    def publish_comment
+      Danthes.publish_to "/questions/#{@commentable.try(:question).try(:id) || @commentable.id}/comments", comment: render_to_string('comment.json.jbuilder') if @comment.valid?
     end
 end

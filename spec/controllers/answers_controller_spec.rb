@@ -65,11 +65,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not delete answer' do
         expect{ delete_answer }.to_not change(Answer, :count)
       end
-
-      it 'it responds with 400' do
-        delete_answer
-        expect(response.status).to eq 400
-      end
     end
 
     context 'when user is not logged in' do
@@ -92,7 +87,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'PATCH #update' do
     let(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
     let(:patch_request) { patch :update, question_id: question.id, id: answer.id,
-                                  answer: { body: 'Edited answer' }, format: :json }
+                                  answer: { body: 'Edited answer' }, format: :js }
 
     context 'when logged in user is the author' do
       before do 
@@ -118,10 +113,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not update record in db' do
         answer.reload
         expect(answer.body).to_not eq 'Edited answer'
-      end
-
-      it 'it responds with 400' do
-        expect(response.status).to eq 400
       end
     end
 
@@ -185,10 +176,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'does not change accepted status' do
         answer.reload
         expect(answer.accepted?).to be_falsey
-      end
-
-      it 'it responds with 400' do
-        expect(response.status).to eq 400
       end
     end
   end

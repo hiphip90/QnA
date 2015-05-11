@@ -34,7 +34,7 @@ li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
           div.form-group
             = f.submit 'Post', class: 'btn btn-primary'
   .edit-answer-form.conceal
-    = form_for answer, remote: true, namespace: "#{dom_id(answer)}" do |f|
+    = form_for answer, remote: true, namespace: "#{dom_id(answer)}", method: :patch do |f|
       = f.label :body, 'Edit answer'
       = f.text_area :body
       .form-group

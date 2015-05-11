@@ -29,17 +29,6 @@ $ ->
     $('#new_answer textarea').val('');
     $('#new_answer .nested-fields').not(':first-child').remove();
     $('.answers-count').text("#{answer.count} answers");
-    
-  # process answer editing
-  $('.answers').bind 'ajax:success', '.edit_answer', (e, data, status, xhr) ->
-    answer = $.parseJSON(xhr.responseText);
-    $("#answer_#{answer.id}").replaceWith(JST["templates/_answer"]({ answer: answer }));
-  $('.answers').bind 'ajax:error', (e, xhr, status, error) ->
-    errors = $.parseJSON(xhr.responseText);
-    $('.answer-errors').remove();
-    for error in errors
-      do (error) ->
-        $(e.target).before('<p class="answer-errors">' + error + '</p>');
 
   # process answer voting
   $('.answers').on 'ajax:success', '.upvote-link, .downvote-link', (e, data, status, xhr) ->

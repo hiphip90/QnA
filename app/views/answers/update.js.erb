@@ -1,0 +1,9 @@
+target = $('#<%= dom_id(@answer) %>')
+$('.answer-errors').remove();
+<% if @answer.valid? %>
+  target.replaceWith('<%= j render @answer %>')
+<% else %>
+  <% @answer.errors.full_messages.each do |msg| %>
+    target.find('.edit-answer-form').before('<p class="answer-errors"><%= j msg %></p>');
+  <% end %>
+<% end %>
