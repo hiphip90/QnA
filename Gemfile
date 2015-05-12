@@ -38,6 +38,9 @@ gem 'danthes'
 gem 'thin'
 gem 'responders'
 
+gem 'omniauth'
+gem 'omniauth-facebook'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
