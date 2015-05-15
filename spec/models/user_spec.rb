@@ -93,30 +93,8 @@ RSpec.describe User, type: :model do
         context 'when auth does not contain email' do
           let(:auth) { OmniAuth::AuthHash.new(provider:'twitter', uid: '123456', info: {}) }
         
-          it 'creates user' do
-            expect{ User.find_for_oauth(auth) }.to change(User, :count).by 1
-          end
-
-          it 'returns user' do
-            expect(User.find_for_oauth(auth)).to be_a User
-          end
-
-          it 'fills in email' do
-            user = User.find_for_oauth(auth)
-            expect(user.email).to eq User::EMAIL_PLACEHOLDER
-          end
-
-          it 'creates authorization for user' do
-            user = User.find_for_oauth(auth)
-            expect(user.authorizations).to_not be_empty
-          end
-
-          it 'assigns provider and uid' do
-            user = User.find_for_oauth(auth)
-            authorization = user.authorizations.last
-
-            expect(authorization.provider).to eq auth.provider
-            expect(authorization.uid).to eq auth.uid
+          it 'returns nil' do
+            expect(User.find_for_oauth(auth)).to eq nil
           end
         end
       end
