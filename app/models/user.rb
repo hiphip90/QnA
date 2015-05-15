@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, 
+         :recoverable, :rememberable, :trackable, :validatable, :confirmable,
          :omniauthable, omniauth_providers: [:facebook, :twitter] 
   before_save :downcase_email
   has_many :questions, dependent: :destroy
@@ -25,10 +25,16 @@ class User < ActiveRecord::Base
     user = User.where(email: email).first
     unless user
       password = Devise.friendly_token[0, 20]
-      user = User.create!(email: email ? email : EMAIL_PLACEHOLDER, password: password, password_confirmation: password)
+      user = User.new(email: email ? email : EMAIL_PLACEHOLDER, password: password, password_confirmation: password)
+      user.skip_confirmation!
+      user.save!
     end
     user.authorizations.create(provider: auth.provider, uid: auth.uid)
     user
+  end
+
+  def confirmed_for_twitter?
+    email && email != EMAIL_PLACEHOLDER
   end
 
   private
