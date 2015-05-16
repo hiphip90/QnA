@@ -4,6 +4,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "emily#{n}@gmail.com" }
     password "password123"
     password_confirmation "password123"
+    confirmed_at Time.now
     trait :invalid do
       name nil
       email nil

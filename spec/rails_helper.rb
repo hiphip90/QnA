@@ -33,6 +33,7 @@ RSpec.configure do |config|
 
   # Add helper methods from support dir
   config.include FeatureHelpers, type: :feature
+  config.include OAuthHelpers, type: :feature
   config.extend ControllerHelpers, type: :controller
 
   # Add devise helpers

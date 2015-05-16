@@ -18,6 +18,6 @@ feature 'Sign up process', %q{
     click_button 'Sign up'
 
     expect(current_path).to eq root_path
-    expect(page).to have_content "Welcome! You have signed up successfully."
+    expect(page).to have_content "A message with a confirmation link has been sent to your email address"
   end
 end
