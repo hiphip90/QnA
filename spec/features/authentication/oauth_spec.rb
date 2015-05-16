@@ -37,6 +37,15 @@ feature 'Sign in process with oauth', %q{
       click_on 'Save'
       expect(page).to have_content 'Email has already been taken'
     end
+
+    scenario 'user signs in from twitter without confirming email' do
+      fill_in 'Email', with: 'correct@email.com'
+      click_on 'Save'
+      
+      visit new_user_session_path
+      click_on 'Sign in with Twitter'
+      expect(page).to have_content 'You have to confirm your email address before continuing.'
+    end
   end
 
   describe 'signin via facebook' do

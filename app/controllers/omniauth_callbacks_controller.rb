@@ -9,11 +9,14 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
     def sign_in_via_oauth
-      @user = User.find_for_oauth(request.env['omniauth.auth'])
+      auth = request.env['omniauth.auth']
+      @user = User.find_for_oauth(auth)
       if @user
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: "#{action_name}".capitalize) if is_navigational_format?
       else
+        cookies[:provider] = { value: auth.provider, expires_at: 15.minutes.from_now }
+        cookies[:uid] = { value: auth.uid, expires_at: 15.minutes.from_now }
         redirect_to request_email_path
       end
     end
