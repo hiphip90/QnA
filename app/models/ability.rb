@@ -14,12 +14,15 @@ class Ability
         can :destroy, [Question, Answer], user: user
 
         can :accept, Answer do |answer|
-          answer.question.user_id == user.id
+          answer.question.user_id == user.id && !answer.accepted?
         end
 
-        alias_action :upvote, :downvote, :recall_vote, to: :vote
+        alias_action :upvote, :downvote, to: :vote
         can :vote, [Question, Answer] do |votable|
-          votable.user_id != user.id
+          votable.user_id != user.id && !votable.been_voted_by?(user)
+        end
+        can :recall_vote, [Question, Answer] do |votable|
+          votable.user_id != user.id && votable.been_voted_by?(user)
         end
       end
     else
