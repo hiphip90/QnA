@@ -1,7 +1,9 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!, only: [:new, :create]
   before_action :get_question, only: [:show, :update, :destroy]
   before_action :build_answer, only: :show
   after_action :publish_question, only: :create
+  authorize_resource except: [:new, :create]
 
   respond_to :html, :js
 
@@ -25,13 +27,12 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    @question.update(question_params) if @question.user_id == current_user.id
+    @question.update(question_params)
     respond_with(@question)
   end
 
   def destroy
-    @question.destroy if @question.user_id == current_user.id
-    respond_with(@question)
+    respond_with(@question.destroy)
   end
 
   private

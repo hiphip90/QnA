@@ -40,9 +40,9 @@ RSpec.describe AnswersController, type: :controller do
         expect{ post_valid }.to_not change(Answer, :count)
       end
 
-      it 'responds with 401' do
+      it 'responds with 302' do
         post_valid
-        expect(response.status).to eq 401
+        expect(response.status).to eq 302
       end
     end
   end
@@ -77,9 +77,9 @@ RSpec.describe AnswersController, type: :controller do
         expect{ delete_answer }.to_not change(Answer, :count)
       end
 
-      it 'responds with 401' do
+      it 'responds with 302' do
         delete_answer
-        expect(response.status).to eq 401
+        expect(response.status).to eq 302
       end
     end
   end
@@ -127,8 +127,8 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer.body).to_not eq 'Edited answer'
       end
 
-      it 'responds with 401' do
-        expect(response.status).to eq 401
+      it 'responds with 302' do
+        expect(response.status).to eq 302
       end
     end
   end

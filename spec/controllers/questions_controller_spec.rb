@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-
   describe 'GET #new' do
     let(:user) { create(:user) }
     before do 
@@ -136,11 +135,6 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'does not delete question' do
         expect{ destroy_question }.to_not change(Question, :count)
-      end
-
-      it 'redirects to sign in page' do
-        destroy_question
-        expect(response).to redirect_to new_user_session_path
       end
     end
   end
