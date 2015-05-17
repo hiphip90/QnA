@@ -29,6 +29,7 @@ gem 'bootstrap-sass', '~> 3.3.3'
 gem 'faker'
 
 gem 'devise'
+gem 'cancancan'
 gem 'carrierwave'
 gem 'remotipart'
 gem 'cocoon'

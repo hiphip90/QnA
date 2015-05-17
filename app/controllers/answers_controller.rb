@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   after_action :publish_answer, only: :create
 
   respond_to :js
+  authorize_resource
   
   include Voting
   
@@ -13,17 +14,16 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy if current_user.id == @answer.user_id
-    respond_with @answer
+    respond_with @answer.destroy
   end
 
   def update
-    @answer.update(answer_params) if current_user.id == @answer.user_id
+    @answer.update(answer_params)
     respond_with @answer
   end
 
   def accept
-    @answer.accept if current_user.id == @question.user_id
+    @answer.accept
     respond_with @answer
   end
 
