@@ -2,7 +2,7 @@
   == render 'question_block', question: @question
   .question-comments
     == render 'comments/comment_list', object: @question
-    - if user_signed_in?
+    - if can?(:create, Comment)
       = link_to "Add comment", '#', class: "new-question-comment-link"
       .question-comment-form.conceal
         = form_for [@question, Comment.new], remote: true do |f|
@@ -12,7 +12,7 @@
           div.form-group
             = f.submit 'Post', class: 'btn btn-primary'
 == render 'answers/answer_list'
-- if user_signed_in?
+- if can?(:create, Answer)
   hr.question-divider
   h4 Your answer
   div.row

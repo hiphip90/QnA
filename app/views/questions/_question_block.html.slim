@@ -1,6 +1,6 @@
 .question-voting
   h3.rating = question.rating
-  - if user_signed_in? && current_user.id != question.user_id
+  - if can?(:vote, question)
     p.upvote-link class=('conceal' if question.been_voted_by?(current_user))
       = link_to 'Upvote', upvote_question_url(question), remote: true, method: :patch
     p.downvote-link class=('conceal' if question.been_voted_by?(current_user))
@@ -14,8 +14,9 @@
   ul
     - question.attachments.each do |a|
       li = link_to a.file.identifier, a.file.url
-  - if user_signed_in? && current_user.id == question.user_id
+  - if can?(:destroy, question)
     span.delete-link = link_to 'Delete question', question, method: :delete
+  - if can?(:update, question)
     |  
     span.edit-link = link_to 'Edit question', {}, class: 'edit-question-link'
   span.pull-right.user-info

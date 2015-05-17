@@ -1,7 +1,7 @@
 li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
   .answer-voting
     h3.rating = answer.rating
-    - if user_signed_in? && current_user.id != answer.user_id
+    - if can?(:vote, answer)
       p.upvote-link class=('conceal' if answer.been_voted_by?(current_user))
         = link_to 'Upvote', upvote_answer_url(answer), remote: true, method: :patch
       p.downvote-link class=('conceal' if answer.been_voted_by?(current_user))
@@ -15,16 +15,17 @@ li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
       - answer.attachments.each do |a|
         li= link_to a.file.identifier, a.file.url
 
-    - if user_signed_in? && current_user.id == answer.user_id
+    - if can?(:destroy, answer)
       = link_to 'Delete answer', answer, remote: true, method: :delete
+    - if can?(:update, answer)
       = link_to 'Edit answer', {}, class: "edit-answer", href: '#'
-    - if user_signed_in? && current_user.id == @question.user_id && !answer.accepted?
+    - if can?(:accept, answer) && !answer.accepted?
       = link_to 'Accept answer', accept_answer_url(answer),
                                           remote: true, method: :patch, class: 'accept-answer'
 
   .answer-comments
     == render 'comments/comment_list', object: answer 
-    - if user_signed_in?
+    - if can?(:create, Comment)
       = link_to "Add comment", '#', class: "new-answer-comment-link"
       .answer-comment-form.conceal
         = form_for [answer, Comment.new], remote: true do |f|
