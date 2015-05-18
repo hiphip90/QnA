@@ -7,16 +7,12 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def all
-    respond_with(users_except_owner)
+    respond_with(User.all_but(current_user))
   end
 
   protected
 
     def current_resource_owner
       @current_resource_owner ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
-    end
-
-    def users_except_owner
-      User.all - [current_resource_owner]
     end
 end

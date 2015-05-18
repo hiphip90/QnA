@@ -37,6 +37,10 @@ class User < ActiveRecord::Base
       password = Devise.friendly_token[0, 20]
       user = User.new(email: email, password: password, password_confirmation: password)
     end
+
+    def all_but(user)
+      all - [user]
+    end
   end
 
   private

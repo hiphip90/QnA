@@ -100,4 +100,19 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '.all_but' do
+    let(:given_user) { create(:user) }
+    let(:users) { create_list(:user, 3) }
+
+    it 'returns all users index' do
+      users.each do |user|
+        expect(User.all_but(given_user).include? user).to be_truthy 
+      end
+    end
+
+    it 'does not return given user' do
+      expect(User.all_but(given_user).include? given_user).to be_falsey
+    end
+  end
 end

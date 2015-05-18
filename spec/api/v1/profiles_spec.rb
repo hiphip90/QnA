@@ -49,9 +49,16 @@ describe 'Profile API' do
       expect(response.status).to eq 200
     end
 
-    it 'returns all users except currently_authenticated' do
+    it 'returns all users' do
       users.each_with_index do |user, index|
         expect(response.body).to be_json_eql(user.id).at_path("#{index}/id")
+      end
+    end
+
+    it 'does not return current user' do
+      response_hash = JSON.parse(response.body)
+      response_hash.each do |user|
+        expect(user[:id]).to_not eq(me.id)
       end
     end
   end
