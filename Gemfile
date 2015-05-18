@@ -30,6 +30,8 @@ gem 'faker'
 
 gem 'devise'
 gem 'cancancan'
+gem 'doorkeeper'
+
 gem 'carrierwave'
 gem 'remotipart'
 gem 'cocoon'
@@ -70,4 +72,5 @@ group :development, :test do
   gem 'launchy'
   gem 'capybara-webkit'
   gem 'database_cleaner'
+  gem 'json_spec'
 end
