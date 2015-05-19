@@ -4,6 +4,10 @@ class Api::V1::AnswersController < Api::V1::BaseController
     respond_with @question.answers
   end
 
+  def show
+    respond_with @answer = Answer.find(params[:id]), serializer: ShowAnswerSerializer, root: 'answer'
+  end
+
   private
     def answer_params
       params.require(:question).permit(:title, :body)
