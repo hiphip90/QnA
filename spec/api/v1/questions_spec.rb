@@ -115,14 +115,30 @@ describe 'Questions API' do
     let(:access_token) { create(:access_token, resource_owner_id: user.id) }
  
     context 'unauthorized' do
-      it 'returns 401 if no access token is supplied' do
-        post "/api/v1/questions", question: attributes_for(:question), format: :json
-        expect(response.status).to eq 401
+      context 'no token' do
+        let(:post_without_token) { post "/api/v1/questions", question: attributes_for(:question), format: :json }
+
+        it 'returns 401 if no access token is supplied' do
+          post_without_token
+          expect(response.status).to eq 401
+        end
+
+        it 'does not create a question' do
+          expect{ post_without_token }.to_not change(Question, :count)
+        end
       end
 
-      it 'returns 401 if access token is invalid' do
-        post "/api/v1/questions", question: attributes_for(:question), format: :json, access_token: '1234'
-        expect(response.status).to eq 401
+      context 'invalid token' do
+        let(:post_with_invalid_token) { post "/api/v1/questions", question: attributes_for(:question), format: :json, access_token: '1234' }
+
+        it 'returns 401 if no access token is supplied' do
+          post_with_invalid_token
+          expect(response.status).to eq 401
+        end
+
+        it 'does not create a question' do
+          expect{ post_with_invalid_token }.to_not change(Question, :count)
+        end
       end
     end
 

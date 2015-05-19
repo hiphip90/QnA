@@ -93,4 +93,55 @@ describe 'Answers API' do
       end
     end
   end
+
+  describe 'POST /create' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+ 
+    context 'unauthorized' do
+      context 'no token' do
+        let(:post_without_token) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json }
+
+        it 'returns 401 if no access token is supplied' do
+          post_without_token
+          expect(response.status).to eq 401
+        end
+
+        it 'does not create an answer' do
+          expect{ post_without_token }.to_not change(Answer, :count)
+        end
+      end
+
+      context 'invalid token' do
+        let(:post_with_invalid_token) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json, access_token: '1234' }
+
+        it 'returns 401 if no access token is supplied' do
+          post_with_invalid_token
+          expect(response.status).to eq 401
+        end
+
+        it 'does not create an answer' do
+          expect{ post_with_invalid_token }.to_not change(Answer, :count)
+        end
+      end
+    end
+
+    context 'authorized' do
+      let(:post_request) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json, access_token: access_token.token }
+
+      it 'returns 201' do
+        post_request
+        expect(response.status).to eq 201
+      end
+
+      it 'creates new answer tied to resource owner'  do
+        expect{post_request}.to change(user.answers, :count).by 1
+      end
+
+      it 'associates answer to question'  do
+        expect{post_request}.to change(question.answers, :count).by 1
+      end
+    end
+  end
 end
