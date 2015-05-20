@@ -1,25 +1,16 @@
 require 'rails_helper'
+require_relative 'shared_examples/api_authentication'
 
 describe 'Profile API' do
   describe 'GET #me' do
-    context 'unauthorized' do
-      it 'returns 401 if no access token is supplied' do
-        get '/api/v1/profiles/me', format: :json
-        expect(response.status).to eq 401
-      end
+    let(:me) { create(:user) }
+    let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-      it 'returns 401 if access token is invalid' do
-        get '/api/v1/profiles/me', format: :json, access_token: '1234'
-        expect(response.status).to eq 401
-      end
-    end
+    it_behaves_like "api authenticatable"
+
+    before { make_request(access_token: access_token.token) }
 
     context 'authorized' do
-      let(:me) { create(:user) }
-      let(:access_token) { create(:access_token, resource_owner_id: me.id) }
-
-      before { get '/api/v1/profiles/me', format: :json, access_token: access_token.token }
-
       it 'returns 200' do
         expect(response.status).to eq 200
       end
@@ -36,6 +27,10 @@ describe 'Profile API' do
         end
       end
     end
+
+    def make_request(options = {})
+      get '/api/v1/profiles/me', { format: :json }.merge(options)
+    end
   end
 
   describe 'GET #all' do
@@ -43,7 +38,9 @@ describe 'Profile API' do
     let!(:users) { create_list(:user, 2) }
     let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-    before { get '/api/v1/profiles/all', format: :json, access_token: access_token.token }
+    it_behaves_like "api authenticatable"
+
+    before { make_request(access_token: access_token.token) }
 
     it 'returns 200' do
       expect(response.status).to eq 200
@@ -60,6 +57,10 @@ describe 'Profile API' do
       response_hash['profiles'].each do |user|
         expect(user[:id]).to_not eq(me.id)
       end
+    end
+
+    def make_request(options = {})
+      get '/api/v1/profiles/all', { format: :json }.merge(options)
     end
   end
 end
