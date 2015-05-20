@@ -16,6 +16,10 @@ Rails.application.routes.draw do
       resource :profiles do
         get :me, :all, on: :collection
       end
+
+      resources :questions do
+        resources :answers
+      end
     end
   end
 

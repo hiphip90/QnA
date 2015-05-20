@@ -51,13 +51,13 @@ describe 'Profile API' do
 
     it 'returns all users' do
       users.each_with_index do |user, index|
-        expect(response.body).to be_json_eql(user.id).at_path("#{index}/id")
+        expect(response.body).to be_json_eql(user.id).at_path("profiles/#{index}/id")
       end
     end
 
     it 'does not return current user' do
       response_hash = JSON.parse(response.body)
-      response_hash.each do |user|
+      response_hash['profiles'].each do |user|
         expect(user[:id]).to_not eq(me.id)
       end
     end
