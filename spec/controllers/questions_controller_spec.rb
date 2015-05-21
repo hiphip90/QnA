@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'shared_examples/publishing'
 
 RSpec.describe QuestionsController, type: :controller do
   describe 'GET #new' do
@@ -49,19 +50,22 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     context 'with valid parameters' do
-      let(:post_with_valid_params) { post :create, question: attributes_for(:question) }
+      let(:publish_url) { "/questions" }
+      let(:make_request) { post :create, question: attributes_for(:question) }
+
+      it_behaves_like 'publishing'
 
       it 'saves question in db and assigns it to user' do
-        expect { post_with_valid_params }.to change(user.questions, :count).by(1)
+        expect { make_request }.to change(user.questions, :count).by(1)
       end
 
       it 'redirects to question page' do
-        post_with_valid_params
+        make_request
         expect(response).to redirect_to question_path(Question.last)
       end
 
       it 'sets flash message' do
-        post_with_valid_params
+        make_request
         expect(flash[:notice]).to_not be_nil
       end
     end

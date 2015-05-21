@@ -1,4 +1,5 @@
 require 'rails_helper'
+require_relative 'shared_examples/publishing'
 
 RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
@@ -7,18 +8,21 @@ RSpec.describe AnswersController, type: :controller do
   before { sign_in(user) }
 
   describe 'POST #create' do
-    let(:post_valid) { post :create, question_id: question.id, 
+    let(:publish_url) { "/questions/#{question.id}/answers" }
+    let(:make_request) { post :create, question_id: question.id, 
                               answer: attributes_for(:answer), format: :js }
     let(:post_invalid) { post :create, question_id: question.id, 
                               answer: attributes_for(:answer, body: nil), format: :js }
 
+    it_behaves_like "publishing"
+
     context 'with valid info' do
       it 'saves answer in db and associates it with a proper question' do
-        expect{ post_valid }.to change(question.answers, :count).by(1)
+        expect{ make_request }.to change(question.answers, :count).by(1)
       end
 
       it 'associates it with a current user' do
-        expect{ post_valid }.to change(user.answers, :count).by(1)
+        expect{ make_request }.to change(user.answers, :count).by(1)
       end
     end
 
@@ -37,11 +41,11 @@ RSpec.describe AnswersController, type: :controller do
       before { sign_out user }
 
       it 'does not save answer in db' do
-        expect{ post_valid }.to_not change(Answer, :count)
+        expect{ make_request }.to_not change(Answer, :count)
       end
 
       it 'responds with 302' do
-        post_valid
+        make_request
         expect(response.status).to eq 302
       end
     end
