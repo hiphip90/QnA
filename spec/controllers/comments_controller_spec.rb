@@ -6,14 +6,14 @@ RSpec.describe CommentsController, type: :controller do
   describe "POST #create" do
     context "when user is logged in" do
       let(:user) { create(:user) }
+      let(:question) { create(:question) }
+      let(:publish_url) { "/questions/#{question.id}/comments" }
       
       before do
         sign_in user
       end
 
       context "for question" do
-        let(:publish_url) { "/questions/#{question.id}/comments" }
-        let(:question) { create(:question) }
         let(:make_request) { post :create, commentable: 'question', question_id: question, comment: attributes_for(:comment), format: :js }
         
         it_behaves_like 'publishing'
@@ -24,8 +24,7 @@ RSpec.describe CommentsController, type: :controller do
       end
 
       context "for answer" do
-        let(:publish_url) { "/questions/#{answer.id}/comments" }
-        let(:answer) { create(:answer) }
+        let(:answer) { create(:answer, question: question) }
         let(:make_request) { post :create, commentable: 'answer', answer_id: answer, comment: attributes_for(:comment), format: :js }
 
         it_behaves_like 'publishing'
