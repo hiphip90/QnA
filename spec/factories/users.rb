@@ -5,6 +5,8 @@ FactoryGirl.define do
     password "password123"
     password_confirmation "password123"
     confirmed_at Time.now
+    reputation 0
+
     trait :invalid do
       name nil
       email nil

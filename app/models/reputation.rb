@@ -12,7 +12,7 @@ class Reputation
     def update(target_user, action, options = default_options)
       reputation_yield = 0
       case action
-        when :create_answer || :accept_answer
+        when :create_answer
           reputation_yield = calculate_yield_for_answer(options)
         when :destroy_answer
           reputation_yield = -1 * calculate_yield_for_answer(options)
@@ -29,7 +29,8 @@ class Reputation
         when :recall_question_vote
           reputation_yield = options[:upvote] ? -1* REP_YIELD[:vote_question] : REP_YIELD[:vote_question]
       end
-      User.update_counters(target_user, reputation: reputation_yield)
+      reputation = target_user.reputation + reputation_yield
+      target_user.update(reputation: reputation)
     end
 
     private
@@ -42,7 +43,7 @@ class Reputation
       end
 
       def default_options
-        { first: false, to_own_question: false, upvote: false }
+        { first: false, to_own_question: false, accepted: false, upvote: false }
       end
   end
 end

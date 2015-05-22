@@ -52,12 +52,10 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { question.answers.create(body: 'smth smth answer') }
+    let!(:answer) { question.answers.create(body: 'smth smth answer', user: user) }
     let(:delete_answer) { delete :destroy, question_id: question.id, id: answer.id, format: :js }
     
     context 'when current user is the author' do
-      before { answer.update_attributes(user: user) }
-
       it 'deletes answer from db' do
         expect{ delete_answer }.to change(Answer, :count).by(-1)
       end
@@ -73,7 +71,6 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'when user is not logged in' do
       before do
-        answer.update_attributes(user: user)
         sign_out user
       end
 
