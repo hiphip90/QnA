@@ -41,6 +41,12 @@ class User < ActiveRecord::Base
     def all_but(user)
       all - [user]
     end
+
+    def send_daily_digest
+      find_each do |user|
+        DailyMailer.digest(user).deliver_later
+      end
+    end
   end
 
   private

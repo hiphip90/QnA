@@ -17,4 +17,19 @@ RSpec.describe Question, type: :model do
 
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
+
+  describe '.weekly_digest' do
+    let(:ancient_question) { create(:question, created_at: 2.weeks.ago) }
+    let(:relevant_questions) { create_list(:question, 2) }
+
+    it 'returns all questions created this week' do
+      relevant_questions.each do |question|
+        expect(Question.weekly_digest).to include(question)
+      end
+    end
+
+    it 'does not return questions created more than week ago' do
+      expect(Question.weekly_digest).to_not include(ancient_question)
+    end
+  end
 end

@@ -43,6 +43,9 @@ gem 'faye'
 gem 'danthes'
 gem 'thin'
 gem 'responders'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', require: nil
+gem 'sidetiq'
 
 gem 'omniauth'
 gem 'omniauth-facebook'

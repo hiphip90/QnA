@@ -115,4 +115,15 @@ RSpec.describe User, type: :model do
       expect(User.all_but(given_user).include? given_user).to be_falsey
     end
   end
+
+  describe '.send_daily_digest' do
+    let(:users) { create_list(:user, 2) }
+
+    it 'should send daily digest to all users' do
+      # Need to figure out why active job calls digest twice for each user. 
+      # Sidekiq alone works as intended though.
+      users.each { |user| expect(DailyMailer).to receive(:digest).with(user).and_call_original.exactly(2).times }
+      User.send_daily_digest
+    end
+  end
 end

@@ -13,4 +13,8 @@ class Question < ActiveRecord::Base
 
   accepts_nested_attributes_for :attachments, reject_if: proc { |attributes| attributes[:file].blank? }, 
                                                                                       allow_destroy: true
+
+  def self.weekly_digest
+    Question.where('created_at > ?', 1.week.ago)
+  end
 end
