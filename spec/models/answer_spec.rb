@@ -38,4 +38,42 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe '#recall_accept' do
+    let(:answer) { create(:answer, accepted: true) }
+
+    it "sets answer's accepted attr to true" do
+      answer.recall_accept
+      expect(answer.accepted?).to be_falsey
+    end
+  end
+
+  describe '#first' do
+    let(:question) { create(:question) }
+    let!(:first_answer) { create(:answer, question: question) }
+    let!(:last_answer) { create(:answer, question: question) }
+
+    it 'returns true if answer is first' do
+      expect(first_answer.first?).to be_truthy
+    end
+
+    it 'returns false if answer is not first' do
+      expect(last_answer.first?).to be_falsey
+    end
+  end
+
+  describe '#to_own_question?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question, user: user) }
+    let(:own_answer) { create(:answer, question: question, user: user) }
+    let(:others_answer) { create(:answer, question: question) }
+
+    it 'returns true if answer is to own question' do
+      expect(own_answer.to_own_question?).to be_truthy
+    end
+
+    it 'returns false if answer is to someone elses question' do
+      expect(others_answer.to_own_question?).to be_falsey
+    end
+  end
 end
