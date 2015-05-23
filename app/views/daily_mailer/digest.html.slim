@@ -1,7 +1,7 @@
 h1 What's new on QnA?
 
-h3 This week's questions digest
+h3 Today's questions digest
 
-- Question.weekly_digest.each do |question|
+- @questions.each do |question|
   p
-    = link_to question_path(question), question.title
+    = link_to question_url(question), question.title

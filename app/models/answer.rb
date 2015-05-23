@@ -14,6 +14,8 @@ class Answer < ActiveRecord::Base
   accepts_nested_attributes_for :attachments, reject_if: proc { |attributes| attributes[:file].blank? }, 
                                                                                       allow_destroy: true
 
+  after_create { SubscriptionsMailer.new_answer(question.user, self).deliver_later }
+
   def accept
     run_callbacks :accept do
       Answer.transaction do

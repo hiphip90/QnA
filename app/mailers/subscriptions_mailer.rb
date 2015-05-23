@@ -1,4 +1,4 @@
-class DailyMailer < ActionMailer::Base
+class SubscriptionsMailer < ActionMailer::Base
   default from: "from@example.com"
 
   # Subject can be set in your I18n file at config/locales/en.yml
@@ -6,8 +6,9 @@ class DailyMailer < ActionMailer::Base
   #
   #   en.daily_mailer.digest.subject
   #
-  def digest(user)
-    @questions = Question.daily_digest
+
+  def new_answer(user, answer)
+    @answer = answer
     mail to: user.email
   end
 end

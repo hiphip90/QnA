@@ -14,6 +14,12 @@ RSpec.describe Answer, type: :model do
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
 
+  it 'mails to question author on create' do
+    question = create(:question)
+    expect(SubscriptionsMailer).to receive(:new_answer).with(question.user, anything).and_call_original.exactly(2).times
+    create(:answer, question: question)
+  end
+
   it 'calls Reputation.update after create/destroy' do
     expect(Reputation).to receive(:update).exactly(2).times
 
