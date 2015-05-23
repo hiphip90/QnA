@@ -64,5 +64,17 @@ describe 'Ability' do
         it { should be_able_to :recall_vote, others_answer, user: user }
       end
     end
+
+    context 'to subscribe_to' do
+      context 'when subscribed' do
+        before { user.subscribe_to_new_answers(others_question) }
+
+        it { should_not be_able_to :subscribe_to, others_question, user: user }
+      end
+
+      context 'when not subscribed' do
+        it { should be_able_to :subscribe_to, others_question, user: user }
+      end
+    end
   end
 end

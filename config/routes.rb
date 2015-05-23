@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   end
 
   resources :questions, concerns: :votable do
+    resources :new_answer_subscriptions, only: [:create]
     resources :comments, defaults: { commentable: 'question' }
     resources :answers, shallow: true, only: [:create, :destroy, :update], concerns: :votable do
       resources :comments, defaults: { commentable: 'answer' }

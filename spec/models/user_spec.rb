@@ -22,6 +22,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:votes) }
   it { should have_many(:comments).dependent(:destroy) }
   it { should have_many(:authorizations).dependent(:destroy) }
+  it { should have_and_belong_to_many(:questions_subscribed_to).dependent(:destroy) }
 
   describe '.find_for_oauth' do
     let!(:user) { create(:user) }
@@ -124,6 +125,31 @@ RSpec.describe User, type: :model do
       # Sidekiq alone works as intended though.
       users.each { |user| expect(DailyMailer).to receive(:digest).with(user).and_call_original.exactly(2).times }
       User.send_daily_digest
+    end
+  end
+
+  describe '#subscribed_to?' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    it 'returns true if subscribed' do
+      user.questions_subscribed_to << question
+      expect(user.subscribed_to?(question)).to be_truthy
+    end
+
+    it 'returns false if not subscribed' do
+      expect(user.subscribed_to?(question)).to be_falsey
+    end
+  end
+
+  describe '#subscribe_to_new_answers' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    before { user.subscribe_to_new_answers(question) }
+
+    it 'subscribes user to question' do
+      expect(user.questions_subscribed_to).to include(question)
     end
   end
 end

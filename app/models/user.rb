@@ -12,9 +12,19 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :votes
   has_many :authorizations, dependent: :destroy
+  has_and_belongs_to_many :questions_subscribed_to, class_name: "Question", join_table: "new_answer_subscriptions",
+                                                                            dependent: :destroy, uniq: true
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }, 
                     length: { maximum: 150 }, format: { with: VALID_EMAIL_REGEX }
+
+  def subscribe_to_new_answers(question)
+    questions_subscribed_to << question
+  end
+
+  def subscribed_to?(question)
+    questions_subscribed_to.where(id: question.id).any?
+  end
 
   class << self
     def find_for_oauth(auth)

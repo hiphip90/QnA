@@ -23,6 +23,13 @@
     = time_ago_in_words(question.created_at)
     |  ago by 
     = question.user.name
+  - if can?(:subscribe, question)
+    .subscription 
+      - if can?(:subscribe_to, question)
+        = link_to "Subscribe to new answers", question_new_answer_subscriptions_path(question), method: :post, remote: true
+      - else
+        span Already subscribed to this question
+        
 p
   .edit-question-form.conceal
     = form_for question, remote: true do |f|

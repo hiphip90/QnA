@@ -4,6 +4,8 @@ class Question < ActiveRecord::Base
   has_many :answers, dependent: :destroy
   has_many :attachments, as: :attachable, dependent: :destroy
   belongs_to :user
+  has_and_belongs_to_many :subscribers, class_name: "User", join_table: "new_answer_subscriptions",
+                                                            dependent: :destroy, uniq: true
 
   include Votable
   include Commentable
