@@ -14,6 +14,75 @@ RSpec.describe Answer, type: :model do
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
 
+  it 'calls Reputation.update after create/destroy' do
+    expect(Reputation).to receive(:update).exactly(2).times
+
+    answer = create(:answer)
+    answer.destroy
+  end
+
+  describe 'it changes reputation on create' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context 'when neither first nor to own question' do
+      before { create(:answer, question: question) }
+
+      it 'by 1' do
+        expect{ create(:answer, question: question, user: user) }.to change(user, :reputation).by 1
+      end
+    end
+
+    context 'when first and to own question' do
+      before { question.update(user: user) }
+
+      it 'by 3' do
+        expect{ create(:answer, question: question, user: user) }.to change(user, :reputation).by 3
+      end
+    end
+  end
+
+  describe 'it changes reputation on destroy' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context 'when neither first nor to own question' do
+      before { create(:answer, question: question) }
+
+      it 'by -1' do
+        answer = create(:answer, question: question, user: user)
+        expect{ answer.destroy }.to change(user, :reputation).by -1
+      end
+    end
+
+    context 'when first and to own question' do
+      before { question.update(user: user) }
+
+      it 'by -3' do
+        answer = create(:answer, question: question, user: user)
+        expect{ answer.destroy }.to change(user, :reputation).by -3
+      end
+    end
+  end
+
+  describe 'it changes reputation on accept' do
+    let(:user) { create(:user) }
+    let!(:answer) { create(:answer, user: user) }
+
+    it 'by 3' do
+      expect{ answer.accept }.to change(user, :reputation).by 3
+    end
+  end
+
+  describe 'it changes reputation on recall accept' do
+    let(:user) { create(:user) }
+    let!(:answer) { create(:answer, user: user) }
+
+    it 'by -3' do
+      expect{ answer.recall_accept }.to change(user, :reputation).by -3
+    end
+  end
+
   describe '#accept' do
     let(:question) { create(:question, :with_answers) }
     let(:answer) { question.answers.last }

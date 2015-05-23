@@ -1,26 +1,16 @@
 require 'rails_helper'
+require_relative 'shared_examples/api_authentication'
 
 describe 'Answers API' do
   describe 'GET /index' do
     let(:question) { create(:question, :with_answers) }
+    let(:access_token) { create(:access_token) }
 
-    context 'unauthorized' do
-      it 'returns 401 if no access token is supplied' do
-        get "/api/v1/questions/#{question.id}/answers", format: :json
-        expect(response.status).to eq 401
-      end
+    it_behaves_like "api authenticatable"
 
-      it 'returns 401 if access token is invalid' do
-        get "/api/v1/questions/#{question.id}/answers", format: :json, access_token: '1234'
-        expect(response.status).to eq 401
-      end
-    end
+    before { make_request(access_token: access_token.token) }
 
     context 'authorized' do
-      let(:access_token) { create(:access_token) }
-
-      before { get "/api/v1/questions/#{question.id}/answers", format: :json, access_token: access_token.token }
-
       it 'returns 200' do
         expect(response.status).to eq 200
       end
@@ -35,31 +25,24 @@ describe 'Answers API' do
         end
       end
     end
+
+    def make_request(options = {})
+      get "/api/v1/questions/#{question.id}/answers", { format: :json }.merge(options)
+    end
   end
 
   describe 'GET /show' do
     let(:question) { create(:question) }
     let(:answer) { create(:answer, question: question) }
     let(:access_token) { create(:access_token) }
+    let!(:comments) { create_list(:comment, 2, commentable: answer) }
+    let!(:attachment) { create(:attachment, attachable: answer) }
  
-    context 'unauthorized' do
-      it 'returns 401 if no access token is supplied' do
-        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", format: :json
-        expect(response.status).to eq 401
-      end
+    it_behaves_like "api authenticatable"
 
-      it 'returns 401 if access token is invalid' do
-        get "/api/v1/questions/#{question.id}/answers/#{answer.id}", format: :json, access_token: '1234'
-        expect(response.status).to eq 401
-      end
-    end
+    before { make_request(access_token: access_token.token) }
 
     context 'authorized' do
-      let!(:comments) { create_list(:comment, 2, commentable: answer) }
-      let!(:attachment) { create(:attachment, attachable: answer) }
-
-      before { get "/api/v1/questions/#{question.id}/answers/#{answer.id}", format: :json, access_token: access_token.token }
-
       it 'returns 200' do
         expect(response.status).to eq 200
       end
@@ -92,21 +75,23 @@ describe 'Answers API' do
         end
       end
     end
+
+    def make_request(options = {})
+      get "/api/v1/questions/#{question.id}/answers/#{answer.id}", { format: :json }.merge(options)
+    end
   end
 
   describe 'POST /create' do
+    let(:api_url) { "/api/v1/questions/#{question.id}/answers" }
     let(:user) { create(:user) }
     let(:question) { create(:question) }
     let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+    it_behaves_like "api authenticatable"
  
     context 'unauthorized' do
       context 'no token' do
-        let(:post_without_token) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json }
-
-        it 'returns 401 if no access token is supplied' do
-          post_without_token
-          expect(response.status).to eq 401
-        end
+        let(:post_without_token) { make_request(answer: attributes_for(:answer)) }
 
         it 'does not create an answer' do
           expect{ post_without_token }.to_not change(Answer, :count)
@@ -114,12 +99,7 @@ describe 'Answers API' do
       end
 
       context 'invalid token' do
-        let(:post_with_invalid_token) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json, access_token: '1234' }
-
-        it 'returns 401 if no access token is supplied' do
-          post_with_invalid_token
-          expect(response.status).to eq 401
-        end
+        let(:post_with_invalid_token) { make_request(answer: attributes_for(:answer), access_token: '1234') }
 
         it 'does not create an answer' do
           expect{ post_with_invalid_token }.to_not change(Answer, :count)
@@ -128,7 +108,7 @@ describe 'Answers API' do
     end
 
     context 'authorized' do
-      let(:post_request) { post "/api/v1/questions/#{question.id}/answers", answer: attributes_for(:answer), format: :json, access_token: access_token.token }
+      let(:post_request) { make_request(answer: attributes_for(:answer), access_token: access_token.token) }
 
       it 'returns 201' do
         post_request
@@ -142,6 +122,10 @@ describe 'Answers API' do
       it 'associates answer to question'  do
         expect{post_request}.to change(question.answers, :count).by 1
       end
+    end
+
+    def make_request(options = {})
+      post "/api/v1/questions/#{question.id}/answers", { format: :json }.merge(options)
     end
   end
 end

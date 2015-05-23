@@ -10,7 +10,7 @@ feature 'Delete answer process', %q{
     @user = create(:user, :author)
     @another_user = create(:user)
     @question = @user.questions.last
-    @answer = @question.answers.create(body: 'smth smth answer')
+    @answer = @question.answers.create(body: 'smth smth answer', user: @user)
     sign_in_as(@user)
   end
 

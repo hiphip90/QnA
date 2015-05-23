@@ -5,6 +5,7 @@ class Answer < ActiveRecord::Base
 
   include Votable
   include Commentable
+  include AffectsReputation::Answer
 
   validates :body, presence: true
   
@@ -14,7 +15,17 @@ class Answer < ActiveRecord::Base
                                                                                       allow_destroy: true
 
   def accept
-    question.answers.where("accepted = ?", true).update_all(accepted: false)
-    update(accepted: true)
+    run_callbacks :accept do
+      Answer.transaction do
+        question.answers.find_by(accepted: true).try(:recall_accept)
+        update(accepted: true)
+      end
+    end
+  end
+
+  def recall_accept
+    run_callbacks :recall_accept do
+      update(accepted: false)
+    end
   end
 end
