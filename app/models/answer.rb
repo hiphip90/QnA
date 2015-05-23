@@ -15,22 +15,17 @@ class Answer < ActiveRecord::Base
                                                                                       allow_destroy: true
 
   def accept
-    question.answers.where("accepted = ?", true).each do |answer|
-      answer.recall_accept
+    run_callbacks :accept do
+      Answer.transaction do
+        question.answers.find_by(accepted: true).try(:recall_accept)
+        update(accepted: true)
+      end
     end
-    update(accepted: true)
   end
 
   def recall_accept
-    update(accepted: false)
+    run_callbacks :recall_accept do
+      update(accepted: false)
+    end
   end
-
-  def first?
-    !question.answers.where('created_at < ?', created_at).any?
-  end
-
-  def to_own_question?
-    user_id == question.user_id
-  end
-
 end

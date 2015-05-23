@@ -24,14 +24,30 @@ module AffectsReputation
       def calculate_reputation_for_accept
         reputation = (accepted? ? 3 : -3)
       end
+
+      def first?
+        !question.answers.where('created_at < ?', created_at).any?
+      end
+
+      def to_own_question?
+        user_id == question.user_id
+      end
   end
 
   module Vote
     extend ActiveSupport::Concern
 
     included do
-      after_create { |vote| Reputation.update(votable.user, value) }
-      after_destroy { |vote| Reputation.update(votable.user, 2*value) }
+      after_create do
+        delta = value
+        delta *= 2 if votable.is_a?(Question)
+        Reputation.update(votable.user, delta)
+      end
+      after_destroy do
+        delta = -1 * value
+        delta *= 2 if votable.is_a?(Question)
+        Reputation.update(votable.user, delta)
+      end
     end
   end
 end

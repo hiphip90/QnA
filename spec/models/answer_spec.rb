@@ -21,6 +21,68 @@ RSpec.describe Answer, type: :model do
     answer.destroy
   end
 
+  describe 'it changes reputation on create' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context 'when neither first nor to own question' do
+      before { create(:answer, question: question) }
+
+      it 'by 1' do
+        expect{ create(:answer, question: question, user: user) }.to change(user, :reputation).by 1
+      end
+    end
+
+    context 'when first and to own question' do
+      before { question.update(user: user) }
+
+      it 'by 3' do
+        expect{ create(:answer, question: question, user: user) }.to change(user, :reputation).by 3
+      end
+    end
+  end
+
+  describe 'it changes reputation on destroy' do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    context 'when neither first nor to own question' do
+      before { create(:answer, question: question) }
+
+      it 'by -1' do
+        answer = create(:answer, question: question, user: user)
+        expect{ answer.destroy }.to change(user, :reputation).by -1
+      end
+    end
+
+    context 'when first and to own question' do
+      before { question.update(user: user) }
+
+      it 'by -3' do
+        answer = create(:answer, question: question, user: user)
+        expect{ answer.destroy }.to change(user, :reputation).by -3
+      end
+    end
+  end
+
+  describe 'it changes reputation on accept' do
+    let(:user) { create(:user) }
+    let!(:answer) { create(:answer, user: user) }
+
+    it 'by 3' do
+      expect{ answer.accept }.to change(user, :reputation).by 3
+    end
+  end
+
+  describe 'it changes reputation on recall accept' do
+    let(:user) { create(:user) }
+    let!(:answer) { create(:answer, user: user) }
+
+    it 'by -3' do
+      expect{ answer.recall_accept }.to change(user, :reputation).by -3
+    end
+  end
+
   describe '#accept' do
     let(:question) { create(:question, :with_answers) }
     let(:answer) { question.answers.last }
@@ -43,44 +105,6 @@ RSpec.describe Answer, type: :model do
         accepted_earlier.reload
         expect(accepted_earlier.accepted?).to be_falsey
       end
-    end
-  end
-
-  describe '#recall_accept' do
-    let(:answer) { create(:answer, accepted: true) }
-
-    it "sets answer's accepted attr to true" do
-      answer.recall_accept
-      expect(answer.accepted?).to be_falsey
-    end
-  end
-
-  describe '#first' do
-    let(:question) { create(:question) }
-    let!(:first_answer) { create(:answer, question: question) }
-    let!(:last_answer) { create(:answer, question: question) }
-
-    it 'returns true if answer is first' do
-      expect(first_answer.first?).to be_truthy
-    end
-
-    it 'returns false if answer is not first' do
-      expect(last_answer.first?).to be_falsey
-    end
-  end
-
-  describe '#to_own_question?' do
-    let(:user) { create(:user) }
-    let(:question) { create(:question, user: user) }
-    let(:own_answer) { create(:answer, question: question, user: user) }
-    let(:others_answer) { create(:answer, question: question) }
-
-    it 'returns true if answer is to own question' do
-      expect(own_answer.to_own_question?).to be_truthy
-    end
-
-    it 'returns false if answer is to someone elses question' do
-      expect(others_answer.to_own_question?).to be_falsey
     end
   end
 end
