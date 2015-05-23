@@ -14,6 +14,13 @@ RSpec.describe Answer, type: :model do
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
 
+  it 'calls Reputation.update after create/destroy' do
+    expect(Reputation).to receive(:update).exactly(2).times
+
+    answer = create(:answer)
+    answer.destroy
+  end
+
   describe '#accept' do
     let(:question) { create(:question, :with_answers) }
     let(:answer) { question.answers.last }
