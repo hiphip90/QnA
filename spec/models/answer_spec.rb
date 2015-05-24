@@ -14,15 +14,6 @@ RSpec.describe Answer, type: :model do
   it_behaves_like 'votable'
   it_behaves_like 'commentable'
 
-  it 'mails to subscribed users on create' do
-    question = create(:question)
-    user = create(:user)
-
-    subject.assign_attributes(body: 'test', question_id: question.id, user_id: user.id)
-    expect(subject).to receive(:send_emails)
-    subject.save!
-  end
-
   it 'calls Reputation.update after create/destroy' do
     expect(Reputation).to receive(:update).exactly(2).times
 
@@ -114,6 +105,26 @@ RSpec.describe Answer, type: :model do
         accepted_earlier.reload
         expect(accepted_earlier.accepted?).to be_falsey
       end
+    end
+  end
+
+  describe 'mails on create' do
+    let(:author) { create(:user) }
+    let!(:subscriber) { create(:user) }
+    let(:question) { create(:question, user: author) }
+
+    before do
+      ActionMailer::Base.deliveries = []
+      subscriber.subscribe_to_new_answers(question)
+      create(:answer ,question: question)
+    end
+
+    it 'to author of a question' do
+      expect(ActionMailer::Base.deliveries.map { |mail| mail.to }).to include([author.email]) 
+    end
+
+    it 'to subscriber' do
+      expect(ActionMailer::Base.deliveries.map { |mail| mail.to }).to include([subscriber.email]) 
     end
   end
 end
