@@ -43,6 +43,9 @@ gem 'faye'
 gem 'danthes'
 gem 'thin'
 gem 'responders'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', require: nil
+gem 'sidetiq'
 
 gem 'omniauth'
 gem 'omniauth-facebook'
@@ -68,6 +71,7 @@ group :development, :test do
   gem 'spring'
 
   gem 'rspec-rails'
+  gem 'rspec-mocks'
   gem 'guard-rspec'
   gem 'factory_girl_rails'
   gem 'shoulda-matchers'

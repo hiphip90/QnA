@@ -107,4 +107,24 @@ RSpec.describe Answer, type: :model do
       end
     end
   end
+
+  describe 'mails on create' do
+    let(:author) { create(:user) }
+    let!(:subscriber) { create(:user) }
+    let(:question) { create(:question, user: author) }
+
+    before do
+      ActionMailer::Base.deliveries = []
+      subscriber.subscribe_to_new_answers(question)
+      create(:answer ,question: question)
+    end
+
+    it 'to author of a question' do
+      expect(ActionMailer::Base.deliveries.map { |mail| mail.to }).to include([author.email]) 
+    end
+
+    it 'to subscriber' do
+      expect(ActionMailer::Base.deliveries.map { |mail| mail.to }).to include([subscriber.email]) 
+    end
+  end
 end

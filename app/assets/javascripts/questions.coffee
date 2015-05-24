@@ -31,6 +31,9 @@ $ ->
     question.find('.upvote-link, .downvote-link').show();
     question.find('.recall-vote').hide();
 
+  $('.subscription').on 'ajax:success', (e, data, status, xhr) ->
+    $('.subscription').find('a').replaceWith("<span>Successfully subscribed!</span>")
+
   # process new question creation
   Danthes.subscribe "/questions", (data, channel) ->
     question = $.parseJSON(data.question);

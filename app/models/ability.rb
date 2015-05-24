@@ -24,6 +24,11 @@ class Ability
         can :recall_vote, [Question, Answer] do |votable|
           votable.user_id != user.id && votable.been_voted_by?(user)
         end
+
+        can :subscribe, Question
+        can :subscribe_to, Question do |question|
+          !user.subscribed_to?(question)
+        end
       end
     else
       can :read, :all

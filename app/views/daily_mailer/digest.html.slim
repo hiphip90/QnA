@@ -1,0 +1,7 @@
+h1 What's new on QnA?
+
+h3 Today's questions digest
+
+- @questions.each do |question|
+  p
+    = link_to question_url(question), question.title
