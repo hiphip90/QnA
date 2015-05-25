@@ -1,2 +1,6 @@
-ul.search-results
-  == render @questions
+.search-results
+  - @results.each do |scope, results|
+    - if results.any?
+      h4 Found in #{scope.underscore}
+      ul class=("#{scope.underscore}-results")
+        == render results

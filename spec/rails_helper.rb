@@ -40,6 +40,7 @@ RSpec.configure do |config|
   config.include FeatureHelpers, type: :feature
   config.include OAuthHelpers, type: :feature
   config.extend ControllerHelpers, type: :controller
+  config.include SphinxHelpers, type: :feature
 
   # Add devise helpers
   config.include Devise::TestHelpers, type: :controller

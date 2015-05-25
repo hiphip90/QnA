@@ -1,8 +1,14 @@
 class SearchController < ApplicationController
   respond_to :html
+  before_action :search_params
 
   def search
-    @questions = Question.search Condition.build_from_params(params[:search])
-    respond_with @questions
+    @results = Finder.perform_search(search_params[:q], search_params[:scope])
+    respond_with @results
   end
+
+  private
+    def search_params
+      params[:search]
+    end
 end
