@@ -6,7 +6,7 @@ feature 'Search', %q{
   I must be able to use search
 } do
 
-  scenario 'User searches for questions' do
+  scenario 'User searches for questions', js: true do
     create(:question, title: 'kewl')
     index
 
@@ -20,7 +20,7 @@ feature 'Search', %q{
     end
   end
 
-  scenario 'User searches for answers' do
+  scenario 'User searches for answers', js: true do
     create(:answer, body: 'Search term')
     index
 
@@ -34,7 +34,7 @@ feature 'Search', %q{
     end
   end
 
-  scenario 'User searches for comments' do
+  scenario 'User searches for comments', js: true do
     create(:comment, body: 'Search term')
     index
 
@@ -48,7 +48,7 @@ feature 'Search', %q{
     end
   end
 
-  scenario 'User searches for comments' do
+  scenario 'User searches for comments', js: true do
     create(:user, name: 'Search term')
     index
 
