@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   get '/users/request_email', to: 'users#request_email', as: :request_email
   post '/users/finish_signup', to: 'users#finish_signup', as: :finish_signup
+  get '/search', to: 'search#search', as: :search
 
   concern :votable do
     member do

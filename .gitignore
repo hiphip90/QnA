@@ -4,6 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+config/*.sphinx.conf
+db/sphinx
+
 # Ignore bundler config.
 /.bundle
 
@@ -13,6 +16,7 @@
 /tmp
 
 config/database.yml
+config/danthes.yml
 
 # Ignore local uploads
 public/uploads
