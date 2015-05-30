@@ -1,3 +1,4 @@
-li id="comment_#{comment.id}"
-  p.body
-    = comment.body
+- cache comment do
+  li id="comment_#{comment.id}"
+    p.body
+      = comment.body
