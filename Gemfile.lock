@@ -97,6 +97,8 @@ GEM
       timers (~> 4.0.0)
     chronic (0.10.2)
     cocoon (1.2.6)
+    codeclimate-test-reporter (0.4.7)
+      simplecov (>= 0.7.1, < 1.0.0)
     coderay (1.1.0)
     coffee-rails (4.1.0)
       coffee-script (>= 2.2.0)
@@ -122,6 +124,7 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
+    docile (1.1.5)
     doorkeeper (2.2.1)
       railties (>= 3.2)
     dotenv (1.0.2)
@@ -344,6 +347,11 @@ GEM
       celluloid (>= 0.14.1)
       ice_cube (= 0.11.1)
       sidekiq (>= 3.0.0)
+    simplecov (0.10.0)
+      docile (~> 1.1.0)
+      json (~> 1.8)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -431,6 +439,7 @@ DEPENDENCIES
   capybara-webkit
   carrierwave
   cocoon
+  codeclimate-test-reporter
   coffee-rails (~> 4.1.0)
   danthes
   database_cleaner

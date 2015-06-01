@@ -100,3 +100,5 @@ group :development, :test do
   gem 'database_cleaner'
   gem 'json_spec'
 end
+
+gem "codeclimate-test-reporter", group: :test, require: nil

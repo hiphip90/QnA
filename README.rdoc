@@ -1,3 +1,6 @@
+[![Code Climate](https://codeclimate.com/github/hiphip90/QnA/badges/gpa.svg)](https://codeclimate.com/github/hiphip90/QnA)
+[![Test Coverage](https://codeclimate.com/github/hiphip90/QnA/badges/coverage.svg)](https://codeclimate.com/github/hiphip90/QnA/coverage)
+
 == README
 
 This README would normally document whatever steps are necessary to get the
