@@ -1,48 +1,49 @@
-li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
-  .answer-voting
-    h3.rating = answer.rating
-    p.upvote-link class=('conceal' unless can?(:vote, answer))
-      = link_to 'Upvote', upvote_answer_url(answer), remote: true, method: :patch
-    p.downvote-link class=('conceal' unless can?(:vote, answer))
-      = link_to 'Downvote', downvote_answer_url(answer), remote: true, method: :patch
-    p.recall-vote class=('conceal' unless can?(:recall_vote, answer))
-      = link_to 'Recall vote', recall_vote_answer_url(answer), remote: true, method: :patch
-  .answer-body
-    span
-      = answer.body
-    ul
-      - answer.attachments.each do |a|
-        li= link_to a.file.identifier, a.file.url
+- cache answer do
+  li.answer id="answer_#{answer.id}" class=('accepted' if answer.accepted?)
+    .answer-voting
+      h3.rating = answer.rating
+      p.upvote-link class=('conceal' unless can?(:vote, answer))
+        = link_to 'Upvote', upvote_answer_url(answer), remote: true, method: :patch
+      p.downvote-link class=('conceal' unless can?(:vote, answer))
+        = link_to 'Downvote', downvote_answer_url(answer), remote: true, method: :patch
+      p.recall-vote class=('conceal' unless can?(:recall_vote, answer))
+        = link_to 'Recall vote', recall_vote_answer_url(answer), remote: true, method: :patch
+    .answer-body
+      span
+        = answer.body
+      ul
+        - answer.attachments.each do |a|
+          li= link_to a.file.identifier, a.file.url
 
-    - if can?(:destroy, answer)
-      = link_to 'Delete answer', answer, remote: true, method: :delete
-    - if can?(:update, answer)
-      = link_to 'Edit answer', {}, class: "edit-answer", href: '#'
-    - if can?(:accept, answer)
-      = link_to 'Accept answer', accept_answer_url(answer),
-                                          remote: true, method: :patch, class: 'accept-answer'
+      - if can?(:destroy, answer)
+        = link_to 'Delete answer', answer, remote: true, method: :delete
+      - if can?(:update, answer)
+        = link_to 'Edit answer', {}, class: "edit-answer", href: '#'
+      - if can?(:accept, answer)
+        = link_to 'Accept answer', accept_answer_url(answer),
+                                            remote: true, method: :patch, class: 'accept-answer'
 
-  .answer-comments
-    == render 'comments/comment_list', object: answer 
-    - if can?(:create, Comment)
-      = link_to "Add comment", '#', class: "new-answer-comment-link"
-      .answer-comment-form.conceal
-        = form_for [answer, Comment.new], remote: true do |f|
-          div.form-group
-            = f.label :body, "Comment"
-            = f.text_area :body, class: 'form-control'
-          div.form-group
-            = f.submit 'Post', class: 'btn btn-primary'
-  .edit-answer-form.conceal
-    = form_for answer, remote: true, namespace: "#{dom_id(answer)}", method: :patch do |f|
-      = f.label :body, 'Edit answer'
-      = f.text_area :body
-      .form-group
-        = f.submit 'Save', class: 'submit'
-        = f.button 'Discard', class: 'discard', type: 'button'
-      #attachments.form-group
-        = f.fields_for :attachments do |field|
-          = render 'attachment_fields', f: field
-        .links
-          = link_to_add_association "Moar files!", f, :attachments
-      
+    .answer-comments
+      == render 'comments/comment_list', object: answer 
+      - if can?(:create, Comment)
+        = link_to "Add comment", '#', class: "new-answer-comment-link"
+        .answer-comment-form.conceal
+          = form_for [answer, Comment.new], remote: true do |f|
+            div.form-group
+              = f.label :body, "Comment"
+              = f.text_area :body, class: 'form-control'
+            div.form-group
+              = f.submit 'Post', class: 'btn btn-primary'
+    .edit-answer-form.conceal
+      = form_for answer, remote: true, namespace: "#{dom_id(answer)}", method: :patch do |f|
+        = f.label :body, 'Edit answer'
+        = f.text_area :body
+        .form-group
+          = f.submit 'Save', class: 'submit'
+          = f.button 'Discard', class: 'discard', type: 'button'
+        #attachments.form-group
+          = f.fields_for :attachments do |field|
+            = render 'attachment_fields', f: field
+          .links
+            = link_to_add_association "Moar files!", f, :attachments
+        

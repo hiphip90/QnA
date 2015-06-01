@@ -1,17 +1,18 @@
-.question data={ question_id: "#{@question.id}" }
-  == render 'question_block', question: @question
-  .question-comments
-    == render 'comments/comment_list', object: @question
-    - if can?(:create, Comment)
-      = link_to "Add comment", '#', class: "new-question-comment-link"
-      .question-comment-form.conceal
-        = form_for [@question, Comment.new], remote: true do |f|
-          div.form-group
-            = f.label :body, "Comment"
-            = f.text_area :body, class: 'form-control'
-          div.form-group
-            = f.submit 'Post', class: 'btn btn-primary'
-== render 'answers/answer_list'
+- cache @question do 
+  .question data={ question_id: "#{@question.id}" }
+    == render 'question_block', question: @question
+    .question-comments
+      == render 'comments/comment_list', object: @question
+      - if can?(:create, Comment)
+        = link_to "Add comment", '#', class: "new-question-comment-link"
+        .question-comment-form.conceal
+          = form_for [@question, Comment.new], remote: true do |f|
+            div.form-group
+              = f.label :body, "Comment"
+              = f.text_area :body, class: 'form-control'
+            div.form-group
+              = f.submit 'Post', class: 'btn btn-primary'
+  == render 'answers/answer_list'
 - if can?(:create, Answer)
   hr.question-divider
   h4 Your answer
